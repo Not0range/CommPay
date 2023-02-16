@@ -1,3 +1,4 @@
+import 'package:com_pay/utils.dart';
 import 'package:flutter/material.dart';
 
 const animationDuration = 200;
@@ -5,19 +6,25 @@ const animationDuration = 200;
 class TextInput extends StatefulWidget {
   final String text;
   final String placeholder;
-  final void Function(String value)? onSubmit;
+  final void Function()? onFocus;
+  final void Function(String value)? onChanged;
   final TextInputAction textInputAction;
   final TextInputType keyboardType;
   final bool obscureText;
+  final String? subText;
+  final TextStyle? subTextStyle;
 
   const TextInput(
       {super.key,
       this.text = '',
       required this.placeholder,
-      this.onSubmit,
+      this.onFocus,
+      this.onChanged,
       this.textInputAction = TextInputAction.done,
       this.keyboardType = TextInputType.text,
-      this.obscureText = false});
+      this.obscureText = false,
+      this.subText,
+      this.subTextStyle});
 
   @override
   State<StatefulWidget> createState() => _TextInputState();
@@ -39,9 +46,12 @@ class _TextInputState extends State<TextInput>
     text = widget.text;
 
     editingController = TextEditingController(text: widget.text);
+    top = !text.isEmptyOrSpace;
 
     controller = AnimationController(
-        duration: const Duration(milliseconds: animationDuration), vsync: this);
+        value: text.isEmptyOrSpace ? 0 : 1,
+        duration: const Duration(milliseconds: animationDuration),
+        vsync: this);
     animation = Tween<double>(begin: 16, end: 10).animate(controller)
       ..addListener(() {
         setState(() {});
@@ -52,7 +62,6 @@ class _TextInputState extends State<TextInput>
 
   @override
   void dispose() {
-    textFieldNode.removeListener(_animatePlaceholder);
     textFieldNode.dispose();
     controller.dispose();
     super.dispose();
@@ -60,9 +69,9 @@ class _TextInputState extends State<TextInput>
 
   void _animatePlaceholder() {
     if (textFieldNode.hasFocus) {
+      widget.onFocus?.call();
       controller.forward();
     } else {
-      widget.onSubmit?.call(text);
       if (text.isEmpty) controller.reverse();
     }
     setState(() {
@@ -74,6 +83,7 @@ class _TextInputState extends State<TextInput>
     setState(() {
       text = value;
     });
+    widget.onChanged?.call(value);
   }
 
   @override
@@ -82,13 +92,26 @@ class _TextInputState extends State<TextInput>
       padding: const EdgeInsets.symmetric(vertical: 4),
       child: Stack(
         children: [
-          TextField(
-            focusNode: textFieldNode,
-            onChanged: onChanged,
-            controller: editingController,
-            keyboardType: widget.keyboardType,
-            textInputAction: widget.textInputAction,
-            obscureText: widget.obscureText,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(bottom: 4),
+                child: TextField(
+                  focusNode: textFieldNode,
+                  onChanged: onChanged,
+                  controller: editingController,
+                  keyboardType: widget.keyboardType,
+                  textInputAction: widget.textInputAction,
+                  obscureText: widget.obscureText,
+                  enabled: widget.onChanged != null,
+                ),
+              ),
+              Text(
+                widget.subText ?? '',
+                style: widget.subTextStyle,
+              )
+            ],
           ),
           AnimatedPositioned(
             top: top ? 0 : 20,
@@ -100,7 +123,7 @@ class _TextInputState extends State<TextInput>
                   widget.placeholder,
                   style: TextStyle(fontSize: animation.value),
                 )),
-          )
+          ),
         ],
       ),
     );

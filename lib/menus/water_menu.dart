@@ -1,5 +1,5 @@
 import 'package:com_pay/routes/scanner_poute.dart';
-import 'package:com_pay/routes/water_routes/water_meters_route.dart';
+import 'package:com_pay/routes/water_routes/my_water_meters_route.dart';
 import 'package:com_pay/widgets/menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -14,7 +14,7 @@ class WaterMenu extends StatelessWidget {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (_) => WaterMetersRoute(
+            builder: (_) => MyWaterMetersRoute(
                   keyString: keyString,
                 )));
   }
@@ -23,7 +23,7 @@ class WaterMenu extends StatelessWidget {
   Future _goToScanner(BuildContext context) async {
     String? result = await Navigator.push(
         context, MaterialPageRoute(builder: (ctx) => const ScannerRoute()));
-    print(result);
+    debugPrint(result);
   }
 
   void _goToSearch(BuildContext context) {

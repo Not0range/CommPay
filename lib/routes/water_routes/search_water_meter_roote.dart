@@ -1,4 +1,5 @@
 import 'package:com_pay/api.dart' as api;
+import 'package:com_pay/routes/water_routes/water_meter_route.dart';
 import 'package:com_pay/utils.dart';
 import 'package:flutter/material.dart';
 
@@ -6,7 +7,6 @@ import '../../entities/water_meter.dart';
 import '../../widgets/loading_indicator.dart';
 import '../../widgets/water_meter_item.dart';
 
-//TODO go to measurment page
 class SearchWaterMeterRoute extends StatefulWidget {
   final String keyString;
 
@@ -51,6 +51,14 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
     }
   }
 
+  void _goToMeasurment(BuildContext context, WaterMeter meter) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) =>
+                WaterMeterRoute(keyString: widget.keyString, meter: meter)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,6 +69,8 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
           child: TextField(
             onChanged: _onChanged,
             focusNode: focus,
+            textInputAction: TextInputAction.search,
+            onSubmitted: (_) => _search(),
           ),
         ),
         actions: [
@@ -81,6 +91,7 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
                         last: meters[i].lastMeasurment,
                         backgroundColor:
                             i % 2 == 0 ? Colors.green[200]! : Colors.blue[200]!,
+                        onTap: () => _goToMeasurment(context, meters[i]),
                       )),
             ),
     );

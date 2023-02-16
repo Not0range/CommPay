@@ -1,5 +1,5 @@
 import 'package:com_pay/entities/water_meter.dart';
-import 'package:com_pay/routes/water_routes/water_measurment_route.dart';
+import 'package:com_pay/routes/water_routes/water_meter_route.dart';
 import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/loading_indicator.dart';
 import 'package:com_pay/widgets/water_meter_item.dart';
@@ -7,16 +7,15 @@ import 'package:flutter/material.dart';
 import 'package:com_pay/api.dart' as api;
 import 'dart:math' as math;
 
-//TODO go to measurment page
-class WaterMetersRoute extends StatefulWidget {
+class MyWaterMetersRoute extends StatefulWidget {
   final String keyString;
-  const WaterMetersRoute({super.key, required this.keyString});
+  const MyWaterMetersRoute({super.key, required this.keyString});
 
   @override
-  State<StatefulWidget> createState() => _WaterMetersRouteState();
+  State<StatefulWidget> createState() => _MyWaterMetersRouteState();
 }
 
-class _WaterMetersRouteState extends State<WaterMetersRoute> {
+class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
   FocusNode focus = FocusNode();
   TextEditingController controller = TextEditingController();
 
@@ -84,8 +83,8 @@ class _WaterMetersRouteState extends State<WaterMetersRoute> {
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (ctx) => WaterMeasurmentRoute(
-                keyString: widget.keyString, meter: meter)));
+            builder: (ctx) =>
+                WaterMeterRoute(keyString: widget.keyString, meter: meter)));
   }
 
   AppBar _getAppBar() {

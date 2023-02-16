@@ -55,31 +55,17 @@ class _MainRouteState extends State<MainRoute> {
 
   @override
   Widget build(BuildContext context) {
-    String title = '';
-    switch (selectedTab) {
-      case 0:
-        title = AppLocalizations.of(context)!.watterSupply;
-        break;
-      case 1:
-        title = AppLocalizations.of(context)!.electricity;
-        break;
-      case 2:
-        title = AppLocalizations.of(context)!.gas;
-        break;
-      case 3:
-        title = AppLocalizations.of(context)!.recycling;
-        break;
-    }
+    var buttons = _tabButtons(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(title),
+        title: Text(buttons[selectedTab].label!),
         actions: [
           IconButton(onPressed: () {}, icon: const Icon(Icons.cloud_upload))
         ],
       ),
       body: _tab(selectedTab),
       bottomNavigationBar: BottomNavigationBar(
-          items: _tabButtons(context),
+          items: buttons,
           currentIndex: selectedTab,
           onTap: _tabTap,
           selectedItemColor: Colors.amber,
