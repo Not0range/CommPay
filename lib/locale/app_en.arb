@@ -1,0 +1,24 @@
+{
+  "error": "Error",
+  "ok": "OK",
+  "notImplemnted": "Not Implemnted",
+  "loading": "Loading...",
+
+  "authorization": "Authorization",
+  "comPay": "Com pay",
+  "phone": "Phone number",
+  "password": "Password",
+  "remember": "Remember me",
+  "login": "Login",
+
+  "watterSupply": "Watter Supply",
+  "electricity": "Electricity",
+  "gas": "Gas",
+  "recycling": "Recycling",
+
+  "myWaterMeters": "My meters",
+  "searchWaterQr": "Search meter by QR",
+  "searchWaterCode": "Search meter by code",
+
+  "aimToQr": "Aim to QR code"
+}

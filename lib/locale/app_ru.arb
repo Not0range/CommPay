@@ -1,0 +1,24 @@
+{
+  "error": "Ошибка",
+  "ok": "ОК",
+  "notImplemnted": "Не реализовано",
+  "loading": "Загрузка...",
+
+  "authorization": "Авторизация",
+  "comPay": "Комунальные платежи",
+  "phone": "Телефон",
+  "password": "Пароль",
+  "remember": "Запомнить",
+  "login": "Вход",
+
+  "watterSupply": "Водоснабжение",
+  "electricity": "Электроэнергия",
+  "gas": "Газ",
+  "recycling": "ТБО",
+
+  "myWaterMeters": "Мои счётчики",
+  "searchWaterQr": "Поиск счётчика по QR",
+  "searchWaterCode": "Поиск счётчика по коду",
+
+  "aimToQr": "Наведите на QR-код"
+}
