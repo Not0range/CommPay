@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
+import '../../../widgets/row_switch.dart';
 import '../../../widgets/water_meter_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:com_pay/api.dart' as api;
@@ -139,15 +140,11 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Switch(value: unmount, onChanged: _setUnmount),
-                          InkWell(
-                            onTap: () => _setUnmount(!unmount),
-                            child: Text(AppLocalizations.of(context)!.unmount),
-                          )
-                        ],
-                      )
+                      RowSwitch(
+                        state: unmount,
+                        onChanged: _setUnmount,
+                        text: AppLocalizations.of(context)!.unmount,
+                      ),
                     ],
                   ),
                 )

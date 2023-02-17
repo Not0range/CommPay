@@ -1,5 +1,6 @@
 import 'package:com_pay/entities/measurment_water.dart';
 import 'package:com_pay/entities/water_meter.dart';
+import 'package:com_pay/widgets/row_switch.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
 
@@ -187,16 +188,11 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
                                 color: Theme.of(context).colorScheme.error)),
                       ),
                     ),
-                    Row(
-                      children: [
-                        Switch(
-                            value: noConsumption, onChanged: _setNoConsumption),
-                        InkWell(
-                            onTap: () => _setNoConsumption(!noConsumption),
-                            child: Text(
-                                AppLocalizations.of(context)!.noConsumption))
-                      ],
-                    )
+                    RowSwitch(
+                      state: noConsumption,
+                      onChanged: _setNoConsumption,
+                      text: AppLocalizations.of(context)!.noConsumption,
+                    ),
                   ],
                 ),
               )

@@ -8,6 +8,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
+import '../../../widgets/row_switch.dart';
 import '../../../widgets/text_input.dart';
 import 'package:com_pay/api.dart' as api;
 
@@ -195,16 +196,11 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                           ],
                         ),
                       ),
-                      Row(
-                        children: [
-                          Switch(value: replace, onChanged: _setReplace),
-                          InkWell(
-                            onTap: () => _setReplace(!replace),
-                            child: Text(
-                                AppLocalizations.of(context)!.replaceMeter),
-                          )
-                        ],
-                      )
+                      RowSwitch(
+                        state: replace,
+                        onChanged: _setReplace,
+                        text: AppLocalizations.of(context)!.replaceMeter,
+                      ),
                     ],
                   ),
                 )
