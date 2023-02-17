@@ -23,6 +23,11 @@
   "measurment": "Measurment",
   "verification": "Verification",
   "replacement": "Replacement",
+  "aimToQr": "Aim to QR code",
+
+  "myWaterMeters": "My meters",
+  "searchWaterQr": "Search meter by QR",
+  "searchWaterCode": "Search meter by code",
   
   "objectId": "Object ID",
   "liability": "liability",
@@ -36,9 +41,8 @@
   "mountingDate": "Mounting date",
   "unmount": "Unmount meter for verification",
 
-  "myWaterMeters": "My meters",
-  "searchWaterQr": "Search meter by QR",
-  "searchWaterCode": "Search meter by code",
-
-  "aimToQr": "Aim to QR code"
+  "replaceMeter": "Replace meter",
+  "serialNumber": "Meter's serial number",
+  "replacementDate": "Replacement date",
+  "newMeterValue": "New meter's value"
 }

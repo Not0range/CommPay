@@ -23,6 +23,11 @@
   "measurment": "Снятие показаний",
   "verification": "Поверка",
   "replacement": "Замена",
+  "aimToQr": "Наведите на QR-код",
+
+  "myWaterMeters": "Мои счётчики",
+  "searchWaterQr": "Поиск счётчика по QR",
+  "searchWaterCode": "Поиск счётчика по коду",
 
   "objectId": "ID объекта",
   "liability": "Ответственный",
@@ -36,9 +41,8 @@
   "mountingDate": "Дата установки после поверки",
   "unmount": "Снятие прибора учёта на поверку",
 
-  "myWaterMeters": "Мои счётчики",
-  "searchWaterQr": "Поиск счётчика по QR",
-  "searchWaterCode": "Поиск счётчика по коду",
-
-  "aimToQr": "Наведите на QR-код"
+  "replaceMeter": "Замена прибора учёта",
+  "serialNumber": "Заводской номер прибора учёта",
+  "replacementDate": "Дата замены",
+  "newMeterValue": "Показания нового прибора учёта"
 }

@@ -131,7 +131,8 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                         padding: const EdgeInsets.only(top: 8),
                         child: TextInput(
                           text: serial,
-                          placeholder: AppLocalizations.of(context)!.prevValue,
+                          placeholder:
+                              AppLocalizations.of(context)!.serialNumber,
                           keyboardType: TextInputType.number,
                           onChanged: _setSerial,
                           subText: _getErrorText(serialError),
@@ -140,7 +141,8 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                         ),
                       ),
                       DatePicker(
-                        placeholder: AppLocalizations.of(context)!.mountingDate,
+                        placeholder:
+                            AppLocalizations.of(context)!.replacementDate,
                         date: replacementDate,
                         onChange: _setReplacementDate,
                       ),
@@ -148,7 +150,8 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                         padding: const EdgeInsets.only(top: 8),
                         child: TextInput(
                           text: value,
-                          placeholder: AppLocalizations.of(context)!.prevValue,
+                          placeholder:
+                              AppLocalizations.of(context)!.newMeterValue,
                           keyboardType: TextInputType.number,
                           onChanged: _setValue,
                           subText: _getErrorText(valueError),
@@ -164,7 +167,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                     Switch(value: replace, onChanged: _setReplace),
                     InkWell(
                       onTap: () => _setReplace(!replace),
-                      child: Text(AppLocalizations.of(context)!.unmount),
+                      child: Text(AppLocalizations.of(context)!.replaceMeter),
                     )
                   ],
                 )
