@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-extension RexponseExtension on http.Response {
+extension ResponseExtension on http.Response {
   bool get isOk {
     return statusCode >= 200 && statusCode < 300;
   }
