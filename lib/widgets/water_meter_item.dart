@@ -47,8 +47,8 @@ class WaterMeterItem extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(DateFormat('dd.MM.y').format(prev)),
-                  Text(DateFormat('dd.MM.y').format(last), style: ts),
+                  Text(DateFormat('dd.MM.yy').format(prev)),
+                  Text(DateFormat('dd.MM.yy').format(last), style: ts),
                 ],
               )
             ],

@@ -73,14 +73,18 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     switch (i) {
       case 0:
         return WaterMeasurmentTab(
-            meter: widget.meter, onChecking: (c) => _setChecking(0, c));
+            keyString: widget.keyString,
+            meter: widget.meter,
+            onChecking: (c) => _setChecking(0, c));
       case 1:
         return WaterVerificationTab(
+          keyString: widget.keyString,
           meter: widget.meter,
           onChecking: (c) => _setChecking(1, c),
         );
       case 2:
         return WaterReplacementTab(
+          keyString: widget.keyString,
           meter: widget.meter,
           onChecking: (c) => _setChecking(2, c),
         );

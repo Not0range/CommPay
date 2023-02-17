@@ -24,7 +24,7 @@ class WaterMeterWidget extends StatelessWidget {
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
           child: Text('${AppLocalizations.of(context)!.liability}: '
-              '${meter.liability}'),
+              '${meter.responsible}'),
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 8),

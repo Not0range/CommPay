@@ -3,8 +3,10 @@ import 'package:com_pay/routes/water_routes/my_water_meters_route.dart';
 import 'package:com_pay/widgets/menu_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:com_pay/api.dart' as api;
 
 import '../routes/water_routes/search_water_meter_route.dart';
+import '../routes/water_routes/water_meter_route.dart';
 
 class WaterMenu extends StatelessWidget {
   final String keyString;
@@ -19,11 +21,18 @@ class WaterMenu extends StatelessWidget {
                 )));
   }
 
-  //TODO go to measurment page
   Future _goToScanner(BuildContext context) async {
     String? result = await Navigator.push(
         context, MaterialPageRoute(builder: (ctx) => const ScannerRoute()));
-    debugPrint(result);
+    if (result == null) return;
+    api.searchWaterMeter(keyString, result).then((list) {
+      if (list.isEmpty) return;
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (ctx) =>
+                  WaterMeterRoute(keyString: keyString, meter: list[0])));
+    });
   }
 
   void _goToSearch(BuildContext context) {

@@ -1,3 +1,4 @@
+import 'package:com_pay/entities/replacement_water.dart';
 import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
@@ -6,13 +7,21 @@ import '../../../entities/water_meter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../widgets/date_picker.dart';
+import '../../../widgets/loading_indicator.dart';
 import '../../../widgets/text_input.dart';
+import 'package:com_pay/api.dart' as api;
 
 class WaterReplacementTab extends StatefulWidget {
   final WaterMeter meter;
+  final String keyString;
+
   final void Function(dynamic state)? onChecking;
 
-  const WaterReplacementTab({super.key, required this.meter, this.onChecking});
+  const WaterReplacementTab(
+      {super.key,
+      required this.keyString,
+      required this.meter,
+      this.onChecking});
 
   @override
   State<StatefulWidget> createState() => _WaterReplacementTab();
@@ -22,6 +31,8 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
     with SingleTickerProviderStateMixin {
   late Animation<double> animation;
   late AnimationController controller;
+
+  bool loading = true;
 
   bool replace = false;
   DateTime? replacementDate;
@@ -41,6 +52,23 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
       ..addListener(() {
         setState(() {});
       });
+
+    _getReplacementData();
+  }
+
+  Future _getReplacementData() async {
+    var r = await api.getReplacemets(widget.keyString, widget.meter);
+    if (mounted) {
+      setState(() {
+        _setReplace(r.replacement);
+        _setSerial(r.serial ?? '');
+        _setReplacementDate(r.date);
+        _setValue(r.value?.toString() ?? '');
+        if (replace) controller.value = 1;
+        loading = false;
+        _checkValues();
+      });
+    }
   }
 
   void _setReplace(bool value) {
@@ -82,7 +110,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
     });
   }
 
-  void _setReplacementDate(DateTime value) {
+  void _setReplacementDate(DateTime? value) {
     setState(() {
       replacementDate = value;
       _checkValues();
@@ -94,7 +122,8 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
         serialError == ErrorType.none &&
         replacementDate != null) {
       var m = widget.meter;
-      widget.onChecking?.call(true);
+      widget.onChecking?.call(ReplacementWater(m.id, replace,
+          serial: serial, date: replacementDate, value: int.parse(value)));
     } else {
       widget.onChecking?.call(null);
     }
@@ -113,68 +142,73 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          WaterMeterWidget(widget.meter),
-          Padding(
-            padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-            child: Column(
-              children: [
-                SizeTransition(
-                  sizeFactor: animation,
-                  axisAlignment: -1,
+    return loading
+        ? const Center(
+            child: LoadingIndicator(),
+          )
+        : Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+                WaterMeterWidget(widget.meter),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: TextInput(
-                          text: serial,
-                          placeholder:
-                              AppLocalizations.of(context)!.serialNumber,
-                          keyboardType: TextInputType.number,
-                          onChanged: _setSerial,
-                          subText: _getErrorText(serialError),
-                          subTextStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
+                      SizeTransition(
+                        sizeFactor: animation,
+                        axisAlignment: -1,
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: TextInput(
+                                text: serial,
+                                placeholder:
+                                    AppLocalizations.of(context)!.serialNumber,
+                                keyboardType: TextInputType.number,
+                                onChanged: _setSerial,
+                                subText: _getErrorText(serialError),
+                                subTextStyle: TextStyle(
+                                    color: Theme.of(context).colorScheme.error),
+                              ),
+                            ),
+                            DatePicker(
+                              placeholder:
+                                  AppLocalizations.of(context)!.replacementDate,
+                              date: replacementDate,
+                              onChange: _setReplacementDate,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 8),
+                              child: TextInput(
+                                text: value,
+                                placeholder:
+                                    AppLocalizations.of(context)!.newMeterValue,
+                                keyboardType: TextInputType.number,
+                                onChanged: _setValue,
+                                subText: _getErrorText(valueError),
+                                subTextStyle: TextStyle(
+                                    color: Theme.of(context).colorScheme.error),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      DatePicker(
-                        placeholder:
-                            AppLocalizations.of(context)!.replacementDate,
-                        date: replacementDate,
-                        onChange: _setReplacementDate,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: TextInput(
-                          text: value,
-                          placeholder:
-                              AppLocalizations.of(context)!.newMeterValue,
-                          keyboardType: TextInputType.number,
-                          onChanged: _setValue,
-                          subText: _getErrorText(valueError),
-                          subTextStyle: TextStyle(
-                              color: Theme.of(context).colorScheme.error),
-                        ),
-                      ),
+                      Row(
+                        children: [
+                          Switch(value: replace, onChanged: _setReplace),
+                          InkWell(
+                            onTap: () => _setReplace(!replace),
+                            child: Text(
+                                AppLocalizations.of(context)!.replaceMeter),
+                          )
+                        ],
+                      )
                     ],
                   ),
-                ),
-                Row(
-                  children: [
-                    Switch(value: replace, onChanged: _setReplace),
-                    InkWell(
-                      onTap: () => _setReplace(!replace),
-                      child: Text(AppLocalizations.of(context)!.replaceMeter),
-                    )
-                  ],
                 )
-              ],
-            ),
-          )
-        ]);
+              ]);
   }
 }
 

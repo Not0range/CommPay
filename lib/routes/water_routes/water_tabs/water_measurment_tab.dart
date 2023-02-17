@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:com_pay/entities/measurment_water.dart';
 import 'package:com_pay/entities/water_meter.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
@@ -9,14 +7,20 @@ import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
 import '../../../widgets/text_input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:com_pay/api.dart' as api;
 
 //TODO current date color when same values
 
 class WaterMeasurmentTab extends StatefulWidget {
   final WaterMeter meter;
+  final String keyString;
   final void Function(MeasurmentWater? state)? onChecking;
 
-  const WaterMeasurmentTab({super.key, required this.meter, this.onChecking});
+  const WaterMeasurmentTab(
+      {super.key,
+      required this.meter,
+      required this.keyString,
+      this.onChecking});
 
   @override
   State<StatefulWidget> createState() => _WaterMeasurmentTabState();
@@ -52,14 +56,13 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   }
 
   Future _getMeasurmentData() async {
-    await Future.delayed(const Duration(seconds: 2));
-    var rand = Random();
-    var p = rand.nextInt(300) + 200;
-    var l = p + rand.nextInt(150);
+    var m = await api.getMeasurments(widget.keyString, widget.meter);
     if (mounted) {
       setState(() {
-        prevValue = p;
-        lastValue = p.toString();
+        prevValue = m.prevValue!;
+        lastValue = m.currentValue.toString();
+        noConsumption = m.noConsumption;
+        if (noConsumption) controller.value = 0;
         loading = false;
         _checkValues();
       });

@@ -66,7 +66,7 @@ class _DatePickerState extends State<DatePicker>
               width: double.maxFinite,
               child: Text(
                   widget.date != null
-                      ? DateFormat('dd.MM.y').format(widget.date!)
+                      ? DateFormat('dd.MM.yy').format(widget.date!)
                       : '',
                   style: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.normal)),

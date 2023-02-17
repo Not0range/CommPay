@@ -6,6 +6,7 @@ import 'package:com_pay/widgets/water_meter_item.dart';
 import 'package:flutter/material.dart';
 import 'package:com_pay/api.dart' as api;
 import 'dart:math' as math;
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 class MyWaterMetersRoute extends StatefulWidget {
   final String keyString;
@@ -44,14 +45,14 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
     }
   }
 
-  void _serach() {
+  void _search() {
     setState(() {
       search = true;
     });
     focus.requestFocus();
   }
 
-  void _cancelSerach() {
+  void _cancelSearch() {
     setState(() {
       search = false;
       searchText = '';
@@ -66,16 +67,17 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
 
   void _clearSearch() {
     controller.clear();
+    _setSearchText('');
   }
 
   void _setDesc(bool value) {
     setState(() {
+      desc = value;
       if (desc) {
         meters.sort((a, b) => b.title.compareTo(a.title));
       } else {
         meters.sort((a, b) => a.title.compareTo(b.title));
       }
-      desc = value;
     });
   }
 
@@ -95,7 +97,7 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
             : search
                 ? AppBar(
                     leading: IconButton(
-                        onPressed: _cancelSerach,
+                        onPressed: _cancelSearch,
                         icon: const Icon(Icons.arrow_back)),
                     title: Container(
                       decoration: BoxDecoration(
@@ -114,9 +116,12 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
                     ],
                   )
                 : AppBar(
+                    title:
+                        Text('${AppLocalizations.of(context)!.myWaterMeters}: '
+                            '${meters.length}'),
                     actions: [
                       IconButton(
-                          onPressed: _serach, icon: const Icon(Icons.search)),
+                          onPressed: _search, icon: const Icon(Icons.search)),
                       AnimatedContainer(
                           transform: Matrix4.rotationX(desc ? math.pi : 0),
                           duration: const Duration(milliseconds: 200),
