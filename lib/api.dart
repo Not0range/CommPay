@@ -14,7 +14,6 @@ const String _tempKey = '1762';
 //TODO edit requests to api server
 
 Future<String> login(String phone, String password) async {
-  _baseUrl; //
   await Future.delayed(const Duration(seconds: 1));
   return 'key';
 }

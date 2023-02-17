@@ -14,6 +14,23 @@ extension StringExtension on String {
   }
 }
 
+Future<DialogResult?> showErrorDialog(BuildContext context, String title,
+    String text, Map<String, DialogResult> actions) async {
+  return showDialog<DialogResult?>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+            title: Text(title),
+            content: Text(text),
+            actions: actions.keys
+                .map((key) => TextButton(
+                    onPressed: () => Navigator.pop(context, actions[key]),
+                    child: Text(key)))
+                .toList(),
+          ));
+}
+
+enum DialogResult { ok, cancel, retry }
+
 AppBar loadingAppBar(BuildContext context) =>
     AppBar(title: Text(AppLocalizations.of(context)!.loading));
 

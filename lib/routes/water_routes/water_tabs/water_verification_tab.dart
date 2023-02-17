@@ -1,6 +1,8 @@
 import 'package:com_pay/entities/verification_water.dart';
 import 'package:com_pay/entities/water_meter.dart';
+import 'package:com_pay/widgets/retry_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
@@ -30,7 +32,8 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
   late Animation<double> animation;
   late AnimationController controller;
 
-  bool loading = true;
+  bool loading = false;
+  bool error = false;
 
   bool unmount = false;
   DateTime? unmountDate;
@@ -51,16 +54,27 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
   }
 
   Future _getVerificationData() async {
-    var v = await api.getVerification(widget.keyString, widget.meter);
-    if (mounted) {
-      setState(() {
-        unmount = v.verification;
-        unmountDate = v.fromDate;
-        installDate = v.toDate;
+    setState(() {
+      error = false;
+      loading = true;
+    });
+    try {
+      var v = await api.getVerification(widget.keyString, widget.meter);
+      if (mounted) {
+        setState(() {
+          unmount = v.verification;
+          unmountDate = v.fromDate;
+          installDate = v.toDate;
 
-        if (unmount) controller.value = 1;
+          if (unmount) controller.value = 1;
+          loading = false;
+          _checkValues();
+        });
+      }
+    } on ClientException catch (_) {
+      setState(() {
+        error = true;
         loading = false;
-        _checkValues();
       });
     }
   }
@@ -110,45 +124,50 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
         ? const Center(
             child: LoadingIndicator(),
           )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-                WaterMeterWidget(widget.meter),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                  child: Column(
-                    children: [
-                      SizeTransition(
-                        sizeFactor: animation,
-                        axisAlignment: -1,
-                        child: Column(
-                          children: [
-                            DatePicker(
-                              placeholder:
-                                  AppLocalizations.of(context)!.unmountingDate,
-                              date: unmountDate,
-                              onChange: _setUnmountDate,
+        : error
+            ? Center(
+                child: RetryWidget(onPressed: _getVerificationData),
+              )
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                    WaterMeterWidget(widget.meter),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                      child: Column(
+                        children: [
+                          SizeTransition(
+                            sizeFactor: animation,
+                            axisAlignment: -1,
+                            child: Column(
+                              children: [
+                                DatePicker(
+                                  placeholder: AppLocalizations.of(context)!
+                                      .unmountingDate,
+                                  date: unmountDate,
+                                  onChange: _setUnmountDate,
+                                ),
+                                DatePicker(
+                                  placeholder: AppLocalizations.of(context)!
+                                      .mountingDate,
+                                  date: installDate,
+                                  minDate: unmountDate,
+                                  onChange: unmountDate != null
+                                      ? _setInstallDate
+                                      : null,
+                                ),
+                              ],
                             ),
-                            DatePicker(
-                              placeholder:
-                                  AppLocalizations.of(context)!.mountingDate,
-                              date: installDate,
-                              minDate: unmountDate,
-                              onChange:
-                                  unmountDate != null ? _setInstallDate : null,
-                            ),
-                          ],
-                        ),
+                          ),
+                          RowSwitch(
+                            state: unmount,
+                            onChanged: _setUnmount,
+                            text: AppLocalizations.of(context)!.unmount,
+                          ),
+                        ],
                       ),
-                      RowSwitch(
-                        state: unmount,
-                        onChanged: _setUnmount,
-                        text: AppLocalizations.of(context)!.unmount,
-                      ),
-                    ],
-                  ),
-                )
-              ]);
+                    )
+                  ]);
   }
 }

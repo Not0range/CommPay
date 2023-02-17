@@ -1,5 +1,6 @@
 import 'package:com_pay/routes/scanner_poute.dart';
 import 'package:com_pay/routes/water_routes/my_water_meters_route.dart';
+import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/menu_item.dart';
 import 'package:com_pay/widgets/overlay_widget.dart';
 import 'package:flutter/material.dart';
@@ -43,7 +44,14 @@ class _WaterMenuState extends State<WaterMenu> {
     _setLoading(true);
     api.searchWaterMeter(widget.keyString, result).then((list) {
       _setLoading(false);
-      if (list.isEmpty) return;
+      if (list.isEmpty) {
+        showErrorDialog(
+            context,
+            AppLocalizations.of(context)!.error,
+            AppLocalizations.of(context)!.codeNotFount,
+            {AppLocalizations.of(context)!.ok: DialogResult.ok});
+        return;
+      }
       Navigator.push(
           context,
           MaterialPageRoute(

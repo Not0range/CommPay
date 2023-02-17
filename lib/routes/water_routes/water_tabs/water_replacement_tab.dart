@@ -1,7 +1,9 @@
 import 'package:com_pay/entities/replacement_water.dart';
 import 'package:com_pay/utils.dart';
+import 'package:com_pay/widgets/retry_widget.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 import '../../../entities/water_meter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,7 +35,8 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   late Animation<double> animation;
   late AnimationController controller;
 
-  bool loading = true;
+  bool loading = false;
+  bool error = false;
 
   bool replace = false;
   DateTime? replacementDate;
@@ -58,16 +61,27 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   }
 
   Future _getReplacementData() async {
-    var r = await api.getReplacemets(widget.keyString, widget.meter);
-    if (mounted) {
+    setState(() {
+      error = false;
+      loading = true;
+    });
+    try {
+      var r = await api.getReplacemets(widget.keyString, widget.meter);
+      if (mounted) {
+        setState(() {
+          _setReplace(r.replacement);
+          _setSerial(r.serial ?? '');
+          _setReplacementDate(r.date);
+          _setValue(r.value?.toString() ?? '');
+          if (replace) controller.value = 1;
+          loading = false;
+          _checkValues();
+        });
+      }
+    } on ClientException catch (_) {
       setState(() {
-        _setReplace(r.replacement);
-        _setSerial(r.serial ?? '');
-        _setReplacementDate(r.date);
-        _setValue(r.value?.toString() ?? '');
-        if (replace) controller.value = 1;
+        error = true;
         loading = false;
-        _checkValues();
       });
     }
   }
@@ -147,64 +161,73 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
         ? const Center(
             child: LoadingIndicator(),
           )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-                WaterMeterWidget(widget.meter),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                  child: Column(
-                    children: [
-                      SizeTransition(
-                        sizeFactor: animation,
-                        axisAlignment: -1,
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: TextInput(
-                                text: serial,
-                                placeholder:
-                                    AppLocalizations.of(context)!.serialNumber,
-                                keyboardType: TextInputType.number,
-                                onChanged: _setSerial,
-                                subText: _getErrorText(serialError),
-                                subTextStyle: TextStyle(
-                                    color: Theme.of(context).colorScheme.error),
-                              ),
+        : error
+            ? Center(
+                child: RetryWidget(
+                onPressed: _getReplacementData,
+              ))
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                    WaterMeterWidget(widget.meter),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                      child: Column(
+                        children: [
+                          SizeTransition(
+                            sizeFactor: animation,
+                            axisAlignment: -1,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: TextInput(
+                                    text: serial,
+                                    placeholder: AppLocalizations.of(context)!
+                                        .serialNumber,
+                                    keyboardType: TextInputType.number,
+                                    onChanged: _setSerial,
+                                    subText: _getErrorText(serialError),
+                                    subTextStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .error),
+                                  ),
+                                ),
+                                DatePicker(
+                                  placeholder: AppLocalizations.of(context)!
+                                      .replacementDate,
+                                  date: replacementDate,
+                                  onChange: _setReplacementDate,
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  child: TextInput(
+                                    text: value,
+                                    placeholder: AppLocalizations.of(context)!
+                                        .newMeterValue,
+                                    keyboardType: TextInputType.number,
+                                    onChanged: _setValue,
+                                    subText: _getErrorText(valueError),
+                                    subTextStyle: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .error),
+                                  ),
+                                ),
+                              ],
                             ),
-                            DatePicker(
-                              placeholder:
-                                  AppLocalizations.of(context)!.replacementDate,
-                              date: replacementDate,
-                              onChange: _setReplacementDate,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.only(top: 8),
-                              child: TextInput(
-                                text: value,
-                                placeholder:
-                                    AppLocalizations.of(context)!.newMeterValue,
-                                keyboardType: TextInputType.number,
-                                onChanged: _setValue,
-                                subText: _getErrorText(valueError),
-                                subTextStyle: TextStyle(
-                                    color: Theme.of(context).colorScheme.error),
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                          RowSwitch(
+                            state: replace,
+                            onChanged: _setReplace,
+                            text: AppLocalizations.of(context)!.replaceMeter,
+                          ),
+                        ],
                       ),
-                      RowSwitch(
-                        state: replace,
-                        onChanged: _setReplace,
-                        text: AppLocalizations.of(context)!.replaceMeter,
-                      ),
-                    ],
-                  ),
-                )
-              ]);
+                    )
+                  ]);
   }
 }
 

@@ -3,6 +3,7 @@ import 'package:com_pay/entities/water_meter.dart';
 import 'package:com_pay/widgets/row_switch.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
@@ -30,7 +31,8 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   late Animation<double> animation;
   late AnimationController controller;
 
-  bool loading = true;
+  bool loading = false;
+  bool error = false;
 
   late DateTime last;
   int prevValue = 0;
@@ -55,15 +57,26 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   }
 
   Future _getMeasurmentData() async {
-    var m = await api.getMeasurments(widget.keyString, widget.meter);
-    if (mounted) {
+    setState(() {
+      loading = true;
+      error = false;
+    });
+    try {
+      var m = await api.getMeasurments(widget.keyString, widget.meter);
+      if (mounted) {
+        setState(() {
+          prevValue = m.prevValue!;
+          lastValue = m.currentValue.toString();
+          noConsumption = m.noConsumption;
+          if (noConsumption) controller.value = 0;
+          loading = false;
+          _checkValues();
+        });
+      }
+    } on ClientException catch (_) {
       setState(() {
-        prevValue = m.prevValue!;
-        lastValue = m.currentValue.toString();
-        noConsumption = m.noConsumption;
-        if (noConsumption) controller.value = 0;
+        error = true;
         loading = false;
-        _checkValues();
       });
     }
   }

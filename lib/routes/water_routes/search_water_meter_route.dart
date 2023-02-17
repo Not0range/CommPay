@@ -1,7 +1,10 @@
 import 'package:com_pay/api.dart' as api;
 import 'package:com_pay/routes/water_routes/water_meter_route.dart';
 import 'package:com_pay/utils.dart';
+import 'package:com_pay/widgets/retry_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
+import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../entities/water_meter.dart';
 import '../../widgets/loading_indicator.dart';
@@ -33,6 +36,7 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
   void _onChanged(String value) {
     setState(() {
       text = value;
+      error = false;
     });
   }
 
@@ -40,12 +44,20 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
     if (text.isEmptyOrSpace) return;
     setState(() {
       loading = true;
+      error = false;
     });
-    var list = await api.searchWaterMeter(widget.keyString, text);
-    if (mounted) {
-      list.sort((a, b) => a.title.compareTo(b.title));
+    try {
+      var list = await api.searchWaterMeter(widget.keyString, text);
+      if (mounted) {
+        list.sort((a, b) => a.title.compareTo(b.title));
+        setState(() {
+          meters = list;
+          loading = false;
+        });
+      }
+    } on ClientException catch (_) {
       setState(() {
-        meters = list;
+        error = true;
         loading = false;
       });
     }
@@ -83,16 +95,24 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
             )
           : GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),
-              child: ListView.builder(
-                  itemCount: meters.length,
-                  itemBuilder: (ctx, i) => WaterMeterItem(
-                        title: meters[i].title,
-                        prev: meters[i].prevMeasurment,
-                        last: meters[i].lastMeasurment,
-                        backgroundColor:
-                            i % 2 == 0 ? Colors.green[200]! : Colors.blue[200]!,
-                        onTap: () => _goToMeasurment(context, meters[i]),
-                      )),
+              child: error
+                  ? Center(child: RetryWidget(onPressed: _search))
+                  : meters.isEmpty
+                      ? Center(
+                          child: Text(AppLocalizations.of(context)!.noResults),
+                        )
+                      : ListView.builder(
+                          itemCount: meters.length,
+                          itemBuilder: (ctx, i) => WaterMeterItem(
+                                title: meters[i].title,
+                                prev: meters[i].prevMeasurment,
+                                last: meters[i].lastMeasurment,
+                                backgroundColor: i % 2 == 0
+                                    ? Colors.green[200]!
+                                    : Colors.blue[200]!,
+                                onTap: () =>
+                                    _goToMeasurment(context, meters[i]),
+                              )),
             ),
     );
   }

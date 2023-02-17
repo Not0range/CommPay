@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:com_pay/api.dart' as api;
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:http/http.dart';
 import 'main_route.dart';
 
 class LoginRoute extends StatefulWidget {
@@ -56,16 +57,11 @@ class _LoginRouteState extends State<LoginRoute> {
       if (phone.isEmptyOrSpace ||
           password.isEmptyOrSpace ||
           password.length < 5) {
-        showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.error),
-                  actions: [
-                    TextButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: Text(AppLocalizations.of(context)!.ok))
-                  ],
-                ));
+        await showErrorDialog(
+            context,
+            AppLocalizations.of(context)!.error,
+            AppLocalizations.of(context)!.fieldsMustFilled,
+            {AppLocalizations.of(context)!.ok: DialogResult.ok});
         return;
       }
       setState(() {
@@ -75,21 +71,17 @@ class _LoginRouteState extends State<LoginRoute> {
       try {
         String key = await api.login(phone, password);
         _goToMain(key);
-      } on Exception catch (_) {
+      } on ClientException catch (_) {
         setState(() {
-          loading = true;
+          loading = false;
         });
-        //TODO error handling
-        showDialog(
-            context: context,
-            builder: (ctx) => AlertDialog(
-                  title: Text(AppLocalizations.of(context)!.error),
-                  actions: [
-                    TextButton(
-                        onPressed: () => Navigator.pop(ctx),
-                        child: Text(AppLocalizations.of(context)!.ok))
-                  ],
-                ));
+        showErrorDialog(context, AppLocalizations.of(context)!.error,
+            AppLocalizations.of(context)!.networkError, {
+          AppLocalizations.of(context)!.refresh: DialogResult.retry,
+          AppLocalizations.of(context)!.cancel: DialogResult.cancel
+        }).then((value) {
+          if (value == DialogResult.retry) _login();
+        });
       }
     });
   }
