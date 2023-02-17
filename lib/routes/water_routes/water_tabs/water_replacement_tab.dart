@@ -69,10 +69,10 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
       var r = await api.getReplacemets(widget.keyString, widget.meter);
       if (mounted) {
         setState(() {
-          _setReplace(r.replacement);
           _setSerial(r.serial ?? '');
           _setReplacementDate(r.date);
           _setValue(r.value?.toString() ?? '');
+          _setReplace(r.replacement);
           if (replace) controller.value = 1;
           loading = false;
           _checkValues();
@@ -95,6 +95,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
     setState(() {
       replace = value;
     });
+    _checkValues();
   }
 
   void _setSerial(String value) {
@@ -133,12 +134,13 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   }
 
   void _checkValues() {
-    if (valueError == ErrorType.none &&
-        serialError == ErrorType.none &&
-        replacementDate != null) {
+    if (!replace ||
+        valueError == ErrorType.none &&
+            serialError == ErrorType.none &&
+            replacementDate != null) {
       var m = widget.meter;
       widget.onChecking?.call(ReplacementWater(m.id, replace,
-          serial: serial, date: replacementDate, value: int.parse(value)));
+          serial: serial, date: replacementDate, value: int.tryParse(value)));
     } else {
       widget.onChecking?.call(null);
     }
