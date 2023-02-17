@@ -4,6 +4,8 @@
   "notImplemnted": "Not Implemnted",
   "loading": "Loading...",
   "inputError": "Wrong value",
+  "leastValue": "Current value at least previous",
+  "sameValue": "Values must be different",
 
   "authorization": "Authorization",
   "comPay": "Com pay",
@@ -20,12 +22,18 @@
   "measurment": "Measurment",
   "verification": "Verification",
   "replacement": "Replacement",
+  
   "objectId": "Object ID",
   "liability": "liability",
   "prevDate": "Previous measurment date",
   "currentDate": "Current measurment date",
   "prevValue": "Previous measurment value",
   "currentValue": "Current measurment value",
+  "noConsumption": "No consumtion",
+
+  "unmountingDate": "Unmounting date",
+  "mountingDate": "Mounting date",
+  "unmount": "Unmount meter for verification",
 
   "myWaterMeters": "My meters",
   "searchWaterQr": "Search meter by QR",
