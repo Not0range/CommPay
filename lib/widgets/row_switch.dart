@@ -13,7 +13,7 @@ class RowSwitch extends StatelessWidget {
       children: [
         Switch(value: state ?? false, onChanged: onChanged),
         InkWell(
-            onTap: () => onChanged?.call(state ?? false),
+            onTap: () => onChanged?.call(!(state ?? true)),
             child: Text(text ?? ''))
       ],
     );

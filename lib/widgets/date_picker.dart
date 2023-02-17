@@ -8,13 +8,19 @@ class DatePicker extends StatefulWidget {
   final DateTime? minDate;
   final DateTime? date;
   final void Function(DateTime)? onChange;
+  final TextStyle? textStyle;
+  final String? subText;
+  final TextStyle? subTextStyle;
 
   const DatePicker(
       {super.key,
       required this.placeholder,
+      this.minDate,
       this.date,
       this.onChange,
-      this.minDate});
+      this.textStyle,
+      this.subText,
+      this.subTextStyle});
 
   @override
   State<StatefulWidget> createState() => _DatePickerState();
@@ -59,18 +65,30 @@ class _DatePickerState extends State<DatePicker>
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          OutlinedButton(
-            onPressed:
-                widget.onChange != null ? () => _openDatePicker(context) : null,
-            child: SizedBox(
-              width: double.maxFinite,
-              child: Text(
-                  widget.date != null
-                      ? DateFormat('dd.MM.yy').format(widget.date!)
-                      : '',
-                  style: const TextStyle(
-                      color: Colors.black, fontWeight: FontWeight.normal)),
-            ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              OutlinedButton(
+                onPressed: widget.onChange != null
+                    ? () => _openDatePicker(context)
+                    : null,
+                child: SizedBox(
+                  width: double.maxFinite,
+                  child: Text(
+                      widget.date != null
+                          ? DateFormat('dd.MM.yy').format(widget.date!)
+                          : '',
+                      style: const TextStyle(
+                              color: Colors.black,
+                              fontWeight: FontWeight.normal)
+                          .merge(widget.textStyle)),
+                ),
+              ),
+              Text(
+                widget.subText ?? '',
+                style: widget.subTextStyle,
+              )
+            ],
           ),
           AnimatedPositioned(
             top: widget.date != null ? -30 : 0,

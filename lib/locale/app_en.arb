@@ -5,8 +5,9 @@
   "loading": "Loading...",
   "inputError": "Wrong value",
   "leastValue": "Current value at least previous",
-  "sameValue": "Values must be different",
+  "sameValues": "Values must be different",
   "emptyError": "Field must be filled",
+  "sameDates": "Dates must be different",
 
   "authorization": "Authorization",
   "comPay": "Com pay",

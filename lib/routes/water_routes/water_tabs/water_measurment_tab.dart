@@ -10,8 +10,6 @@ import '../../../widgets/text_input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:com_pay/api.dart' as api;
 
-//TODO current date color when same values
-
 class WaterMeasurmentTab extends StatefulWidget {
   final WaterMeter meter;
   final String keyString;
@@ -131,7 +129,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
       case ErrorType.leastValue:
         return AppLocalizations.of(context)!.leastValue;
       case ErrorType.sameValues:
-        return AppLocalizations.of(context)!.sameValue;
+        return AppLocalizations.of(context)!.sameValues;
       case ErrorType.wrongValue:
         return AppLocalizations.of(context)!.inputError;
       case ErrorType.emptyValue:
@@ -158,35 +156,41 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
                       placeholder: AppLocalizations.of(context)!.prevDate,
                       date: widget.meter.prevMeasurment,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 8),
-                      child: TextInput(
-                        text: prevValue.toString(),
-                        placeholder: AppLocalizations.of(context)!.prevValue,
-                        keyboardType: TextInputType.number,
-                      ),
+                    TextInput(
+                      text: prevValue.toString(),
+                      placeholder: AppLocalizations.of(context)!.prevValue,
+                      keyboardType: TextInputType.number,
                     ),
                     DatePicker(
-                      placeholder: AppLocalizations.of(context)!.currentDate,
-                      minDate: widget.meter.prevMeasurment,
-                      date: last,
-                      onChange: _setLastDate,
-                    ),
+                        placeholder: AppLocalizations.of(context)!.currentDate,
+                        minDate: widget.meter.prevMeasurment,
+                        date: last,
+                        onChange: _setLastDate,
+                        subText: widget.meter.prevMeasurment == last
+                            ? AppLocalizations.of(context)!.sameDates
+                            : '',
+                        textStyle: widget.meter.prevMeasurment == last
+                            ? TextStyle(
+                                color: Theme.of(context).colorScheme.error)
+                            : null,
+                        subTextStyle: TextStyle(
+                            color: Theme.of(context).colorScheme.error)),
                     SizeTransition(
                       sizeFactor: animation,
                       axisAlignment: -1,
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 8),
-                        child: TextInput(
-                            text: lastValue,
-                            placeholder:
-                                AppLocalizations.of(context)!.currentValue,
-                            keyboardType: TextInputType.number,
-                            onChanged: _setLastValue,
-                            subText: _getErrorText(),
-                            subTextStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.error)),
-                      ),
+                      child: TextInput(
+                          text: lastValue,
+                          placeholder:
+                              AppLocalizations.of(context)!.currentValue,
+                          keyboardType: TextInputType.number,
+                          onChanged: _setLastValue,
+                          textStyle: lastValueError != ErrorType.none
+                              ? TextStyle(
+                                  color: Theme.of(context).colorScheme.error)
+                              : null,
+                          subText: _getErrorText(),
+                          subTextStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.error)),
                     ),
                     RowSwitch(
                       state: noConsumption,

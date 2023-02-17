@@ -12,6 +12,7 @@ class TextInput extends StatefulWidget {
   final TextInputType keyboardType;
   final bool obscureText;
   final String? subText;
+  final TextStyle? textStyle;
   final TextStyle? subTextStyle;
 
   const TextInput(
@@ -24,6 +25,7 @@ class TextInput extends StatefulWidget {
       this.keyboardType = TextInputType.text,
       this.obscureText = false,
       this.subText,
+      this.textStyle,
       this.subTextStyle});
 
   @override
@@ -105,6 +107,7 @@ class _TextInputState extends State<TextInput>
                   textInputAction: widget.textInputAction,
                   obscureText: widget.obscureText,
                   enabled: widget.onChanged != null,
+                  style: widget.textStyle,
                 ),
               ),
               Text(
