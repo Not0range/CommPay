@@ -33,6 +33,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   @override
   void initState() {
     super.initState();
+    replacementDate = DateTime.now();
 
     controller = AnimationController(
         duration: const Duration(milliseconds: 100), vsync: this);
@@ -56,6 +57,13 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   void _setSerial(String value) {
     setState(() {
       serial = value;
+      if (serial.isEmptyOrSpace) {
+        serialError = ErrorType.emptyValue;
+      } else if (int.tryParse(serial) == null) {
+        serialError = ErrorType.wrongValue;
+      } else {
+        serialError = ErrorType.none;
+      }
       _checkValues();
     });
   }
@@ -63,6 +71,13 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   void _setValue(String value) {
     setState(() {
       this.value = value;
+      if (value.isEmptyOrSpace) {
+        valueError = ErrorType.emptyValue;
+      } else if (int.tryParse(value) == null) {
+        valueError = ErrorType.wrongValue;
+      } else {
+        valueError = ErrorType.none;
+      }
       _checkValues();
     });
   }
@@ -75,20 +90,6 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   }
 
   void _checkValues() {
-    if (serial.isEmptyOrSpace) {
-      serialError = ErrorType.emptyValue;
-    } else if (int.tryParse(serial) == null) {
-      serialError = ErrorType.wrongValue;
-    } else {
-      serialError = ErrorType.none;
-    }
-    if (value.isEmptyOrSpace) {
-      valueError = ErrorType.emptyValue;
-    } else if (int.tryParse(value) == null) {
-      valueError = ErrorType.wrongValue;
-    } else {
-      valueError = ErrorType.none;
-    }
     if (valueError == ErrorType.none &&
         serialError == ErrorType.none &&
         replacementDate != null) {

@@ -88,9 +88,20 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
     }
     setState(() {
       noConsumption = value;
-      var v = int.tryParse(lastValue);
       _checkValues();
     });
+  }
+
+  ErrorType _checkError(int? value) {
+    if (value == null) {
+      return ErrorType.wrongValue;
+    } else if (value < prevValue) {
+      return ErrorType.leastValue;
+    } else if (value == prevValue) {
+      return ErrorType.sameValues;
+    } else {
+      return ErrorType.none;
+    }
   }
 
   void _checkValues() {
@@ -98,20 +109,12 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
     if (noConsumption) {
       lastValueError = ErrorType.none;
     } else {
-      if (v == null) {
-        lastValueError = ErrorType.wrongValue;
-      } else if (v < prevValue) {
-        lastValueError = ErrorType.leastValue;
-      } else if (v == prevValue) {
-        lastValueError = ErrorType.sameValues;
-      } else {
-        lastValueError = ErrorType.none;
-      }
+      lastValueError = _checkError(v);
     }
     if (lastValueError == ErrorType.none) {
       var m = widget.meter;
-      widget.onChecking?.call(MeasurmentWater(m.id, noConsumption, last,
-          noConsumption ? prevValue : int.parse(lastValue)));
+      widget.onChecking?.call(MeasurmentWater(
+          m.id, noConsumption, last, noConsumption ? prevValue : v!));
     } else {
       widget.onChecking?.call(null);
     }
