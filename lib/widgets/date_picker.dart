@@ -22,18 +22,15 @@ class DatePicker extends StatefulWidget {
 
 class _DatePickerState extends State<DatePicker>
     with SingleTickerProviderStateMixin {
-  DateTime? value;
-
   late Animation<double> animation;
   late AnimationController controller;
 
   @override
   void initState() {
     super.initState();
-    value = widget.date;
 
     controller = AnimationController(
-        value: value != null ? 1 : 0,
+        value: widget.date != null ? 1 : 0,
         duration: const Duration(milliseconds: animationDuration),
         vsync: this);
     animation = Tween<double>(begin: 16, end: 10).animate(controller)
@@ -46,14 +43,12 @@ class _DatePickerState extends State<DatePicker>
     DateTime? d = await showDialog(
         context: context,
         builder: (ctx) => DatePickerDialog(
-            initialDate: value ?? DateTime.now(),
+            initialDate: widget.date ?? DateTime.now(),
             firstDate:
                 widget.minDate != null ? widget.minDate! : DateTime(1960),
             lastDate: DateTime.now()));
     if (d == null) return;
-    setState(() {
-      value = d;
-    });
+    widget.onChange?.call(d);
     controller.forward();
   }
 
@@ -70,17 +65,21 @@ class _DatePickerState extends State<DatePicker>
             child: SizedBox(
               width: double.maxFinite,
               child: Text(
-                  value != null ? DateFormat('dd.MM.y').format(value!) : '',
+                  widget.date != null
+                      ? DateFormat('dd.MM.y').format(widget.date!)
+                      : '',
                   style: const TextStyle(
                       color: Colors.black, fontWeight: FontWeight.normal)),
             ),
           ),
           AnimatedPositioned(
-            top: value != null ? -30 : 0,
-            left: value != null ? -5 : 4,
+            top: widget.date != null ? -30 : 0,
+            left: widget.date != null ? -5 : 4,
             duration: const Duration(milliseconds: animationDuration),
             child: TextButton(
-              onPressed: () => _openDatePicker(context),
+              onPressed: widget.onChange != null
+                  ? () => _openDatePicker(context)
+                  : null,
               child: Text(widget.placeholder,
                   style: TextStyle(
                       fontSize: animation.value,

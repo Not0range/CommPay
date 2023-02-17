@@ -1,5 +1,7 @@
 import 'package:com_pay/entities/water_meter.dart';
-import 'package:com_pay/routes/water_routes/water_measurment_tab.dart';
+import 'package:com_pay/routes/water_routes/water_tabs/water_measurment_tab.dart';
+import 'package:com_pay/routes/water_routes/water_tabs/water_replacement_tab.dart';
+import 'package:com_pay/routes/water_routes/water_tabs/water_verification_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -33,7 +35,9 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     }
   }
 
-  Future _save() async {}
+  Future _save() async {
+    FocusScope.of(context).unfocus();
+  }
 
   List<BottomNavigationBarItem> _tabButtons(BuildContext context) {
     return [
@@ -54,6 +58,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
 
   void _tabTap(int i) {
     setState(() {
+      results[i] = null;
       selectedTab = i;
     });
   }
@@ -70,9 +75,15 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
         return WaterMeasurmentTab(
             meter: widget.meter, onChecking: (c) => _setChecking(0, c));
       case 1:
-        return Container();
+        return WaterVerificationTab(
+          meter: widget.meter,
+          onChecking: (c) => _setChecking(1, c),
+        );
       case 2:
-        return Container();
+        return WaterReplacementTab(
+          meter: widget.meter,
+          onChecking: (c) => _setChecking(2, c),
+        );
     }
     return Container();
   }
