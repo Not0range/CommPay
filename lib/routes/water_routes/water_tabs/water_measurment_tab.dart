@@ -127,6 +127,8 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
         return AppLocalizations.of(context)!.sameValue;
       case ErrorType.wrongValue:
         return AppLocalizations.of(context)!.inputError;
+      case ErrorType.emptyValue:
+        return AppLocalizations.of(context)!.emptyError;
     }
   }
 
@@ -197,4 +199,4 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   }
 }
 
-enum ErrorType { none, sameValues, leastValue, wrongValue }
+enum ErrorType { none, sameValues, leastValue, wrongValue, emptyValue }

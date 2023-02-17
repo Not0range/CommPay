@@ -6,6 +6,7 @@
   "inputError": "Wrong value",
   "leastValue": "Current value at least previous",
   "sameValue": "Values must be different",
+  "emptyError": "Field must be filled",
 
   "authorization": "Authorization",
   "comPay": "Com pay",
