@@ -163,10 +163,10 @@ class _LoginRouteState extends State<LoginRoute> {
                 )
               : GestureDetector(
                   onTap: () => FocusScope.of(context).unfocus(),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 30, horizontal: 40),
-                    child: SingleChildScrollView(
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 30, horizontal: 40),
                       child: Column(children: [
                         const Image(
                           image: AssetImage('assets/main_icon.png'),
