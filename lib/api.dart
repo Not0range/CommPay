@@ -11,8 +11,6 @@ import 'entities/water/water_meter.dart';
 const String _baseUrl = 'https://commpay.idc.md/api/v1';
 const String _tempKey = '1762';
 
-//TODO edit requests to api server
-
 Future<String> login(String phone, String password) async {
   await Future.delayed(const Duration(seconds: 1));
   return 'key';
@@ -73,19 +71,46 @@ Future<ReplacementWater> getReplacemets(String key, WaterMeter meter) async {
 }
 
 Future<SuccessResponse> addMeasurment(MeasurmentWater measurment) async {
-  var temp = measurment.toJson();
+  var body = measurment.toJson();
+  // ignore: dead_code
+  if (false) {
+    //TODO do real request
+    http.Response res = await http.post(
+        Uri.parse('$_baseUrl/water/save_dev_meters'),
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: body);
+    return SuccessResponse.fromJson(jsonDecode(res.body));
+  }
   await Future.delayed(const Duration(seconds: 2));
   return SuccessResponse(true);
 }
 
 Future<SuccessResponse> addVerification(VerificationWater verification) async {
-  var temp = verification.toJson();
+  var body = verification.toJson();
+  // ignore: dead_code
+  if (false) {
+    //TODO do real request
+    http.Response res = await http.post(
+        Uri.parse('$_baseUrl/water/save_dev_verification'),
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: body);
+    return SuccessResponse.fromJson(jsonDecode(res.body));
+  }
   await Future.delayed(const Duration(seconds: 2));
   return SuccessResponse(true);
 }
 
 Future<SuccessResponse> addReplacement(ReplacementWater replacement) async {
-  var temp = replacement.toJson();
+  var body = replacement.toJson();
+  // ignore: dead_code
+  if (false) {
+    //TODO do real request
+    http.Response res = await http.post(
+        Uri.parse('$_baseUrl/water/save_dev_replacement'),
+        headers: {'Content-Type': 'application/json;charset=utf-8'},
+        body: body);
+    return SuccessResponse.fromJson(jsonDecode(res.body));
+  }
   await Future.delayed(const Duration(seconds: 2));
   return SuccessResponse(true);
 }

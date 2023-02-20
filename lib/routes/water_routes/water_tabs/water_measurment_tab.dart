@@ -1,13 +1,10 @@
-import 'package:com_pay/entities/photo_send.dart';
 import 'package:com_pay/entities/water/measurment_water.dart';
 import 'package:com_pay/entities/water/water_meter.dart';
 import 'package:com_pay/widgets/row_switch.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
-import 'package:provider/provider.dart';
 
-import '../../../app_model.dart';
 import '../../../utils.dart';
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';

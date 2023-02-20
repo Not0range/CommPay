@@ -11,6 +11,8 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:com_pay/utils.dart';
 
+import '../../widgets/loading_indicator.dart';
+
 class WaterMeterRoute extends StatefulWidget {
   final String keyString;
   final WaterMeter meter;
@@ -26,6 +28,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     with SingleTickerProviderStateMixin {
   List<dynamic> results = List.generate(3, (_) => null);
   int selectedTab = 0;
+  bool loading = false;
 
   @override
   void initState() {
@@ -53,8 +56,15 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     }
   }
 
+  void _setLoading(bool value) {
+    setState(() {
+      loading = value;
+    });
+  }
+
   Future _save() async {
     FocusScope.of(context).unfocus();
+    _setLoading(true);
 
     if (selectedTab == 0) {
       await addMeasurment(results[0]);
@@ -63,6 +73,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     } else if (selectedTab == 2) {
       await addReplacement(results[2]);
     }
+    _setLoading(false);
   }
 
   List<BottomNavigationBarItem> _tabButtons(BuildContext context) {
@@ -83,6 +94,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
   }
 
   void _tabTap(int i) {
+    if (selectedTab == i || loading) return;
     setState(() {
       results[i] = null;
       selectedTab = i;
@@ -144,7 +156,11 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
       ),
       body: GestureDetector(
         onTap: () => FocusScope.of(context).unfocus(),
-        child: _tabs(selectedTab),
+        child: loading
+            ? const Center(
+                child: LoadingIndicator(),
+              )
+            : _tabs(selectedTab),
       ),
       bottomNavigationBar: BottomNavigationBar(
         items: _tabButtons(context),
