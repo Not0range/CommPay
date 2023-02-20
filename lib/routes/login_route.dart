@@ -202,6 +202,7 @@ class _LoginRouteState extends State<LoginRoute> {
                             keyboardType: TextInputType.visiblePassword,
                             onFocus: () => _setErrorText(false),
                             onChanged: _setPassword,
+                            onSubmit: (_) => _setErrorText(password.length < 5),
                             obscureText: true,
                             subText: passwordError
                                 ? AppLocalizations.of(context)!.passwordLength
