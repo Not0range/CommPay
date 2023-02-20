@@ -1,4 +1,4 @@
-import 'package:com_pay/routes/scanner_poute.dart';
+import 'package:com_pay/routes/scanner_route.dart';
 import 'package:com_pay/routes/water_routes/my_water_meters_route.dart';
 import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/menu_item.dart';
@@ -41,8 +41,10 @@ class _WaterMenuState extends State<WaterMenu> {
     String? result = await Navigator.push(
         context, MaterialPageRoute(builder: (ctx) => const ScannerRoute()));
     if (result == null) return;
+    await Future.delayed(Duration.zero);
     _setLoading(true);
     api.searchWaterMeter(widget.keyString, result).then((list) {
+      if (!mounted) return;
       _setLoading(false);
       if (list.isEmpty) {
         showErrorDialog(

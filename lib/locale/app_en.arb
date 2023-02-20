@@ -7,6 +7,7 @@
   "searchInvite": "Type query an press search button",
   "noResults": "No results",
   "codeNotFount": "Device with this serial not found",
+  "qrNotFount": "Image not contains qr-codes",
   
   "networkError": "Network error. Check Internet connection.",
   "errorLoadingData": "Load data error.\nTry again later.",

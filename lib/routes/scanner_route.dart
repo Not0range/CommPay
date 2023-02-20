@@ -1,3 +1,4 @@
+import 'package:com_pay/utils.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
@@ -13,6 +14,7 @@ class ScannerRoute extends StatefulWidget {
 class _ScannerRouteState extends State<ScannerRoute> {
   MobileScannerController controller = MobileScannerController(
       torchEnabled: false, formats: [BarcodeFormat.qrCode]);
+  bool _haveResult = false;
 
   @override
   void initState() {
@@ -20,8 +22,11 @@ class _ScannerRouteState extends State<ScannerRoute> {
   }
 
   void close(String? result) {
-    controller.stop();
-    Navigator.pop(context, result);
+    if (!mounted) return;
+    if (!_haveResult) {
+      Navigator.pop(context, result);
+      _haveResult = true;
+    }
   }
 
   @override
@@ -30,7 +35,7 @@ class _ScannerRouteState extends State<ScannerRoute> {
     super.dispose();
   }
 
-  Widget _aimGenerator(int index) {
+  Widget _aimWidget(int index) {
     var bs = BorderSide(color: Theme.of(context).primaryColor, width: 10);
     var rotate = index == 2
         ? 3
@@ -53,8 +58,17 @@ class _ScannerRouteState extends State<ScannerRoute> {
   Future _openGalery() async {
     final ImagePicker picker = ImagePicker();
     final XFile? photo = await picker.pickImage(source: ImageSource.gallery);
+    controller.stop();
     if (photo != null) {
-      //TODO scan photo
+      controller.analyzeImage(photo.path).then((value) {
+        if (!value) {
+          showErrorDialog(
+              context,
+              AppLocalizations.of(context)!.error,
+              AppLocalizations.of(context)!.qrNotFount,
+              {AppLocalizations.of(context)!.ok: DialogResult.ok});
+        }
+      });
     }
   }
 
@@ -96,7 +110,7 @@ class _ScannerRouteState extends State<ScannerRoute> {
                         aspectRatio: 1,
                         child: GridView.count(
                             crossAxisCount: 2,
-                            children: List<Widget>.generate(4, _aimGenerator)),
+                            children: List<Widget>.generate(4, _aimWidget)),
                       ),
                     ),
                   ),
@@ -112,12 +126,13 @@ class _ScannerRouteState extends State<ScannerRoute> {
               fit: StackFit.expand,
               children: [
                 MobileScanner(
-                    controller: controller,
-                    onDetect: (detect) {
-                      if (detect.barcodes.isNotEmpty) {
-                        close(detect.barcodes[0].rawValue!);
-                      }
-                    }),
+                  controller: controller,
+                  onDetect: (detect) {
+                    if (detect.barcodes.isNotEmpty) {
+                      close(detect.barcodes[0].rawValue!);
+                    }
+                  },
+                ),
                 mask
               ],
             );
