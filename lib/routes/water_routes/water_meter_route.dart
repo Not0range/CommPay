@@ -1,10 +1,14 @@
-import 'package:com_pay/entities/water_meter.dart';
+import 'package:com_pay/app_model.dart';
+import 'package:com_pay/entities/photo_send.dart';
+import 'package:com_pay/entities/water/water_meter.dart';
 import 'package:com_pay/routes/water_routes/water_tabs/water_measurment_tab.dart';
 import 'package:com_pay/routes/water_routes/water_tabs/water_replacement_tab.dart';
 import 'package:com_pay/routes/water_routes/water_tabs/water_verification_tab.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+import 'package:com_pay/utils.dart';
 
 class WaterMeterRoute extends StatefulWidget {
   final String keyString;
@@ -31,7 +35,19 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     final ImagePicker picker = ImagePicker();
     final XFile? photo = await picker.pickImage(source: ImageSource.camera);
     if (photo != null) {
-      debugPrint('Photo!');
+      _addToQueue(photo);
+    }
+  }
+
+  void _addToQueue(XFile file) {
+    var provider = Provider.of<AppModel>(context, listen: false);
+    PhotoSend? ps = provider.photosToSend.cast<PhotoSend?>().firstWhere(
+        (item) => item!.meter.id == widget.meter.id,
+        orElse: () => null);
+    if (ps == null) {
+      provider.add(PhotoSend(widget.meter, DateTime.now().today, [file.path]));
+    } else {
+      ps.paths.add(file.path);
     }
   }
 

@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../../entities/water_meter.dart';
+import '../../entities/water/water_meter.dart';
 import '../../widgets/loading_indicator.dart';
 import '../../widgets/water_meter_item.dart';
 

@@ -14,6 +14,12 @@ extension StringExtension on String {
   }
 }
 
+extension DateTimeExtension on DateTime {
+  DateTime get today {
+    return DateTime(year, month, day);
+  }
+}
+
 Future<DialogResult?> showErrorDialog(BuildContext context, String title,
     String text, Map<String, DialogResult> actions) async {
   return showDialog<DialogResult?>(

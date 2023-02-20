@@ -1,5 +1,5 @@
-import 'package:com_pay/entities/verification_water.dart';
-import 'package:com_pay/entities/water_meter.dart';
+import 'package:com_pay/entities/water/verification_water.dart';
+import 'package:com_pay/entities/water/water_meter.dart';
 import 'package:com_pay/widgets/retry_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';

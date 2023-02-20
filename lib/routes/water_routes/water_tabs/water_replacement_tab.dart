@@ -1,11 +1,11 @@
-import 'package:com_pay/entities/replacement_water.dart';
+import 'package:com_pay/entities/water/replacement_water.dart';
 import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/retry_widget.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
-import '../../../entities/water_meter.dart';
+import '../../../entities/water/water_meter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../widgets/date_picker.dart';

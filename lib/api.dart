@@ -1,12 +1,12 @@
 import 'dart:convert';
 
-import 'package:com_pay/entities/measurment_water.dart';
-import 'package:com_pay/entities/replacement_water.dart';
+import 'package:com_pay/entities/water/measurment_water.dart';
+import 'package:com_pay/entities/water/replacement_water.dart';
 import 'package:com_pay/entities/success_response.dart';
-import 'package:com_pay/entities/verification_water.dart';
+import 'package:com_pay/entities/water/verification_water.dart';
 import 'package:http/http.dart' as http;
 
-import 'entities/water_meter.dart';
+import 'entities/water/water_meter.dart';
 
 const String _baseUrl = 'https://commpay.idc.md/api/v1';
 const String _tempKey = '1762';

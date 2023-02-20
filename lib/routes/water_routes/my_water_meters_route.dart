@@ -1,4 +1,4 @@
-import 'package:com_pay/entities/water_meter.dart';
+import 'package:com_pay/entities/water/water_meter.dart';
 import 'package:com_pay/routes/water_routes/water_meter_route.dart';
 import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/loading_indicator.dart';

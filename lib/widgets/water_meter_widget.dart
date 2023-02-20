@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../entities/water_meter.dart';
+import '../entities/water/water_meter.dart';
 
 class WaterMeterWidget extends StatelessWidget {
   final WaterMeter meter;

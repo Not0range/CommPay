@@ -1,4 +1,5 @@
 import 'package:com_pay/menus/water_menu.dart';
+import 'package:com_pay/routes/sending_photos_route.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -53,6 +54,11 @@ class _MainRouteState extends State<MainRoute> {
     );
   }
 
+  void _goToPhotoSending() {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (ctx) => const SendingPhotoRoute()));
+  }
+
   @override
   Widget build(BuildContext context) {
     var buttons = _tabButtons(context);
@@ -60,7 +66,9 @@ class _MainRouteState extends State<MainRoute> {
       appBar: AppBar(
         title: Text(buttons[selectedTab].label!),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.cloud_upload))
+          IconButton(
+              onPressed: _goToPhotoSending,
+              icon: const Icon(Icons.cloud_upload))
         ],
       ),
       body: _tab(selectedTab),

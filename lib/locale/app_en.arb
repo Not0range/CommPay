@@ -33,6 +33,9 @@
   "verification": "Verification",
   "replacement": "Replacement",
   "aimToQr": "Aim to QR code",
+  "sendingPhotos": "Sending photos",
+  "photoDate": "Photo made in",
+  "fileInQueue": "Files in queue count",
 
   "myWaterMeters": "My meters",
   "searchWaterQr": "Search meter by QR",

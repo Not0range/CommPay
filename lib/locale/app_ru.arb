@@ -33,6 +33,9 @@
   "verification": "Поверка",
   "replacement": "Замена",
   "aimToQr": "Наведите на QR-код",
+  "sendingPhotos": "Отправка фото",
+  "photoDate": "Фото сделаны",
+  "fileInQueue": "Файлов в очереди",
 
   "myWaterMeters": "Мои счётчики",
   "searchWaterQr": "Поиск счётчика по QR",

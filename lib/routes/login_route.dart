@@ -1,6 +1,6 @@
 import 'dart:convert';
-import 'dart:io';
 
+import 'package:com_pay/entities/photo_send.dart';
 import 'package:com_pay/utils.dart';
 import 'package:com_pay/widgets/loading_indicator.dart';
 import 'package:com_pay/widgets/overlay_widget.dart';
@@ -10,8 +10,10 @@ import 'package:com_pay/api.dart' as api;
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart';
-import 'package:path_provider/path_provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../app_model.dart';
 import 'main_route.dart';
+import 'package:provider/provider.dart';
 
 class LoginRoute extends StatefulWidget {
   const LoginRoute({super.key});
@@ -23,38 +25,41 @@ class LoginRoute extends StatefulWidget {
 class _LoginRouteState extends State<LoginRoute> {
   bool remember = false;
   String phone = '';
-  Map<String, dynamic> settings = {};
   String password = '';
 
   bool login = false;
-  bool loading = false;
+  bool loading = true;
   bool passwordError = false;
 
   @override
   void initState() {
     super.initState();
-    _getSettings();
+    _loadStorage();
   }
 
-  Future _getSettings() async {
-    _setLoading(true);
-    var docDir = (await getApplicationDocumentsDirectory());
-    var f = File('${docDir.path}/settings.json');
-    if (!(await f.exists())) {
-      var f = File('${docDir.path}/settings.json');
-      await f.writeAsString('{}');
-      _setLoading(false);
-      return;
-    }
+  Future _loadStorage() async {
+    SharedPreferences.getInstance().then((prefs) {
+      if (prefs.containsKey('photo_queue')) {
+        var list = prefs.getStringList('photo_queue');
+        if (list != null) {
+          Provider.of<AppModel>(context, listen: false)
+              .addAll(list.map((e) => PhotoSend.fromJson(jsonDecode(e))));
+        }
+      }
 
-    settings = jsonDecode(await f.readAsString());
-    if (settings.containsKey('phone')) {
-      setState(() {
-        phone = settings['phone'];
-        remember = true;
-      });
-    }
-    _setLoading(false);
+      if (prefs.containsKey('phone')) {
+        var phone = prefs.getString('phone');
+        if (phone != null) {
+          setState(() {
+            this.phone = phone;
+            remember = true;
+            loading = false;
+          });
+        }
+      } else {
+        _setLoading(false);
+      }
+    });
   }
 
   void _setLoading(bool value) {
@@ -110,14 +115,11 @@ class _LoginRouteState extends State<LoginRoute> {
       try {
         String key = await api.login(phone, password);
 
-        var docDir = (await getApplicationDocumentsDirectory());
-        var f = File('${docDir.path}/settings.json');
-        if (remember && phone != settings['phone']) {
-          settings['phone'] = phone;
-          await f.writeAsString(jsonEncode(settings));
-        } else if (!remember) {
-          settings.remove('phone');
-          await f.writeAsString(jsonEncode(settings));
+        var prefs = await SharedPreferences.getInstance();
+        if (remember) {
+          prefs.setString('phone', phone);
+        } else if (prefs.containsKey('phone')) {
+          prefs.remove('phone');
         }
 
         _goToMain(key);
