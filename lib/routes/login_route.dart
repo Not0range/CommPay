@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:com_pay/entities/photo_send.dart';
 import 'package:com_pay/utils.dart';
@@ -42,8 +43,12 @@ class _LoginRouteState extends State<LoginRoute> {
       if (prefs.containsKey('photo_queue')) {
         var list = prefs.getStringList('photo_queue');
         if (list != null) {
+          var psList = list.map((e) => PhotoSend.fromJson(jsonDecode(e)));
+          for (var e in psList) {
+            e.paths.removeWhere((el) => !File(el).existsSync());
+          }
           Provider.of<AppModel>(context, listen: false)
-              .addAll(list.map((e) => PhotoSend.fromJson(jsonDecode(e))));
+              .addAll(psList.where((e) => e.paths.isNotEmpty));
         }
       }
 

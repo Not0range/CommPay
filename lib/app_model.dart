@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'dart:io';
 
 import 'package:com_pay/entities/photo_send.dart';
 import 'package:flutter/material.dart';
@@ -24,17 +25,21 @@ class AppModel extends ChangeNotifier {
 
   void remove(PhotoSend item) {
     _photosToSend.remove(item);
+    _removeImages(item);
     notifyListeners();
     _setData();
   }
 
   void removeAt(int index) {
-    _photosToSend.removeAt(index);
+    _removeImages(_photosToSend.removeAt(index));
     notifyListeners();
     _setData();
   }
 
   void clear() {
+    for (var ps in _photosToSend) {
+      _removeImages(ps);
+    }
     _photosToSend.clear();
     notifyListeners();
     _setData();
@@ -44,5 +49,14 @@ class AppModel extends ChangeNotifier {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setStringList(
         'photo_queue', _photosToSend.map((e) => e.toJson()).toList());
+  }
+
+  Future _removeImages(PhotoSend ps) async {
+    for (var e in ps.paths) {
+      var file = File(e);
+      if (await file.exists()) {
+        await file.delete();
+      }
+    }
   }
 }
