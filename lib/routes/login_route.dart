@@ -53,12 +53,10 @@ class _LoginRouteState extends State<LoginRoute> {
           setState(() {
             this.phone = phone;
             remember = true;
-            loading = false;
           });
         }
-      } else {
-        _setLoading(false);
       }
+      _setLoading(false);
     });
   }
 
