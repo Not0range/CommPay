@@ -8,6 +8,7 @@ import 'package:http/http.dart';
 import 'package:provider/provider.dart';
 
 import '../../../app_model.dart';
+import '../../../utils.dart';
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
 import '../../../widgets/text_input.dart';
@@ -130,24 +131,13 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
       lastValueError = _checkError(v);
     }
 
-    if (lastValueError == ErrorType.none && _getPhotoCount(context) > 0) {
+    if (lastValueError == ErrorType.none) {
       var m = widget.meter;
       widget.onChecking?.call(MeasurmentWater(
           m.id, noConsumption, last, noConsumption ? prevValue : v!));
     } else {
       widget.onChecking?.call(null);
     }
-  }
-
-  int _getPhotoCount(BuildContext context) {
-    var ps = Provider.of<AppModel>(context, listen: false)
-        .photosToSend
-        .cast<PhotoSend?>()
-        .singleWhere((el) => el!.meter.id == widget.meter.id,
-            orElse: () => null);
-    var count = 0;
-    if (ps != null) count = ps.paths.length;
-    return count;
   }
 
   String _getErrorText() {
@@ -167,7 +157,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
 
   @override
   Widget build(BuildContext context) {
-    var count = _getPhotoCount(context);
+    var count = getPhotoCount(context, widget.meter.id);
     return loading
         ? const Center(
             child: LoadingIndicator(),
@@ -232,7 +222,11 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
                               '${AppLocalizations.of(context)!.photoAttached}: '
                               '$count',
                             )
-                          : Container()
+                          : Text(
+                              AppLocalizations.of(context)!.needPhoto,
+                              style: TextStyle(
+                                  color: Theme.of(context).colorScheme.error),
+                            )
                     ])
                   ],
                 ),

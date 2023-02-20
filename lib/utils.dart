@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
+import 'package:provider/provider.dart';
+
+import 'app_model.dart';
+import 'entities/photo_send.dart';
 
 extension ResponseExtension on http.Response {
   bool get isOk {
@@ -33,6 +37,16 @@ Future<DialogResult?> showErrorDialog(BuildContext context, String title,
                     child: Text(key)))
                 .toList(),
           ));
+}
+
+int getPhotoCount(BuildContext context, String id) {
+  var ps = Provider.of<AppModel>(context, listen: false)
+      .photosToSend
+      .cast<PhotoSend?>()
+      .singleWhere((el) => el!.meter.id == id, orElse: () => null);
+  var count = 0;
+  if (ps != null) count = ps.paths.length;
+  return count;
 }
 
 enum DialogResult { ok, cancel, retry }

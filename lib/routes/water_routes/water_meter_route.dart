@@ -1,3 +1,4 @@
+import 'package:com_pay/api.dart';
 import 'package:com_pay/app_model.dart';
 import 'package:com_pay/entities/photo_send.dart';
 import 'package:com_pay/entities/water/water_meter.dart';
@@ -52,9 +53,16 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     }
   }
 
-  //TODO save data
   Future _save() async {
     FocusScope.of(context).unfocus();
+
+    if (selectedTab == 0) {
+      await addMeasurment(results[0]);
+    } else if (selectedTab == 1) {
+      await addVerification(results[1]);
+    } else if (selectedTab == 2) {
+      await addReplacement(results[2]);
+    }
   }
 
   List<BottomNavigationBarItem> _tabButtons(BuildContext context) {
@@ -110,6 +118,16 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     return Container();
   }
 
+  double _getScale(BuildContext context) {
+    if (selectedTab != 0) {
+      return results[selectedTab] != null ? 1 : 0;
+    }
+
+    return results[0] != null && getPhotoCount(context, widget.meter.id) > 0
+        ? 1
+        : 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     var buttons = _tabButtons(context);
@@ -135,7 +153,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
       ),
       floatingActionButton: AnimatedScale(
           duration: const Duration(milliseconds: 200),
-          scale: results[selectedTab] != null ? 1 : 0,
+          scale: _getScale(context),
           child: FloatingActionButton(
               onPressed: _save, child: const Icon(Icons.save))),
     );

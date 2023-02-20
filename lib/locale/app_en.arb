@@ -50,6 +50,7 @@
   "currentValue": "Current measurment value",
   "noConsumption": "No consumtion",
   "photoAttached": "Photo attached count",
+  "needPhoto": "Need attach photo",
 
   "unmountingDate": "Unmounting date",
   "mountingDate": "Mounting date",

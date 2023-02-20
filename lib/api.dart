@@ -73,6 +73,19 @@ Future<ReplacementWater> getReplacemets(String key, WaterMeter meter) async {
 }
 
 Future<SuccessResponse> addMeasurment(MeasurmentWater measurment) async {
+  var temp = measurment.toJson();
+  await Future.delayed(const Duration(seconds: 2));
+  return SuccessResponse(true);
+}
+
+Future<SuccessResponse> addVerification(VerificationWater verification) async {
+  var temp = verification.toJson();
+  await Future.delayed(const Duration(seconds: 2));
+  return SuccessResponse(true);
+}
+
+Future<SuccessResponse> addReplacement(ReplacementWater replacement) async {
+  var temp = replacement.toJson();
   await Future.delayed(const Duration(seconds: 2));
   return SuccessResponse(true);
 }

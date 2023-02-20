@@ -50,6 +50,7 @@
   "currentValue": "Настоящее показание",
   "noConsumption": "Нет потребления",
   "photoAttached": "Фото прикреплено",
+  "needPhoto": "Необходимо прикрепить фото",
 
   "unmountingDate": "Дата снятия на поверку",
   "mountingDate": "Дата установки после поверки",
