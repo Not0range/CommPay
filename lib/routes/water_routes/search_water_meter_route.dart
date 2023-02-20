@@ -22,6 +22,7 @@ class SearchWaterMeterRoute extends StatefulWidget {
 class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
   FocusNode focus = FocusNode();
 
+  bool first = true;
   bool loading = false;
   bool error = false;
   String text = '';
@@ -43,6 +44,7 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
   Future _search() async {
     if (text.isEmptyOrSpace) return;
     setState(() {
+      first = false;
       loading = true;
       error = false;
     });
@@ -99,7 +101,9 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
                   ? Center(child: RetryWidget(onPressed: _search))
                   : meters.isEmpty
                       ? Center(
-                          child: Text(AppLocalizations.of(context)!.noResults),
+                          child: Text(first
+                              ? AppLocalizations.of(context)!.searchInvite
+                              : AppLocalizations.of(context)!.noResults),
                         )
                       : ListView.builder(
                           itemCount: meters.length,

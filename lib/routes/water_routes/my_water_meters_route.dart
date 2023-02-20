@@ -76,6 +76,7 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
   }
 
   void _cancelSearch() {
+    controller.clear();
     setState(() {
       search = false;
       searchText = '';
@@ -110,6 +111,14 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
         MaterialPageRoute(
             builder: (ctx) =>
                 WaterMeterRoute(keyString: widget.keyString, meter: meter)));
+  }
+
+  Future<bool> _willPop() async {
+    if (search) {
+      _cancelSearch();
+      return false;
+    }
+    return true;
   }
 
   AppBar _getAppBar() {
@@ -165,28 +174,31 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
               .contains(RegExp(searchText.trim(), caseSensitive: false)))
           .toList();
     }
-    return Scaffold(
-      appBar: _getAppBar(),
-      body: loading
-          ? const Center(
-              child: LoadingIndicator(),
-            )
-          : error
-              ? Container()
-              : GestureDetector(
-                  onTap: () => FocusScope.of(context).unfocus(),
-                  child: ListView.builder(
-                      itemCount: list.length,
-                      itemBuilder: (ctx, i) => WaterMeterItem(
-                            title: list[i].title,
-                            prev: list[i].prevMeasurment,
-                            last: list[i].lastMeasurment,
-                            backgroundColor: i % 2 == 0
-                                ? Colors.green[200]!
-                                : Colors.blue[200]!,
-                            onTap: () => _goToMeasurment(context, list[i]),
-                          )),
-                ),
+    return WillPopScope(
+      onWillPop: _willPop,
+      child: Scaffold(
+        appBar: _getAppBar(),
+        body: loading
+            ? const Center(
+                child: LoadingIndicator(),
+              )
+            : error
+                ? Container()
+                : GestureDetector(
+                    onTap: () => FocusScope.of(context).unfocus(),
+                    child: ListView.builder(
+                        itemCount: list.length,
+                        itemBuilder: (ctx, i) => WaterMeterItem(
+                              title: list[i].title,
+                              prev: list[i].prevMeasurment,
+                              last: list[i].lastMeasurment,
+                              backgroundColor: i % 2 == 0
+                                  ? Colors.green[200]!
+                                  : Colors.blue[200]!,
+                              onTap: () => _goToMeasurment(context, list[i]),
+                            )),
+                  ),
+      ),
     );
   }
 }
