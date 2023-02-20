@@ -1,10 +1,13 @@
+import 'package:com_pay/entities/photo_send.dart';
 import 'package:com_pay/entities/water/measurment_water.dart';
 import 'package:com_pay/entities/water/water_meter.dart';
 import 'package:com_pay/widgets/row_switch.dart';
 import 'package:com_pay/widgets/water_meter_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart';
+import 'package:provider/provider.dart';
 
+import '../../../app_model.dart';
 import '../../../widgets/date_picker.dart';
 import '../../../widgets/loading_indicator.dart';
 import '../../../widgets/text_input.dart';
@@ -126,13 +129,25 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
     } else {
       lastValueError = _checkError(v);
     }
-    if (lastValueError == ErrorType.none) {
+
+    if (lastValueError == ErrorType.none && _getPhotoCount(context) > 0) {
       var m = widget.meter;
       widget.onChecking?.call(MeasurmentWater(
           m.id, noConsumption, last, noConsumption ? prevValue : v!));
     } else {
       widget.onChecking?.call(null);
     }
+  }
+
+  int _getPhotoCount(BuildContext context) {
+    var ps = Provider.of<AppModel>(context, listen: false)
+        .photosToSend
+        .cast<PhotoSend?>()
+        .singleWhere((el) => el!.meter.id == widget.meter.id,
+            orElse: () => null);
+    var count = 0;
+    if (ps != null) count = ps.paths.length;
+    return count;
   }
 
   String _getErrorText() {
@@ -152,6 +167,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
 
   @override
   Widget build(BuildContext context) {
+    var count = _getPhotoCount(context);
     return loading
         ? const Center(
             child: LoadingIndicator(),
@@ -210,6 +226,14 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
                       onChanged: _setNoConsumption,
                       text: AppLocalizations.of(context)!.noConsumption,
                     ),
+                    Row(children: [
+                      count > 0
+                          ? Text(
+                              '${AppLocalizations.of(context)!.photoAttached}: '
+                              '$count',
+                            )
+                          : Container()
+                    ])
                   ],
                 ),
               )

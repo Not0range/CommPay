@@ -36,6 +36,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     final XFile? photo = await picker.pickImage(source: ImageSource.camera);
     if (photo != null) {
       _addToQueue(photo);
+      setState(() {});
     }
   }
 

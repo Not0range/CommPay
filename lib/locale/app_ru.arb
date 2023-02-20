@@ -49,6 +49,7 @@
   "prevValue": "Предыдущее показание",
   "currentValue": "Настоящее показание",
   "noConsumption": "Нет потребления",
+  "photoAttached": "Фото прикреплено",
 
   "unmountingDate": "Дата снятия на поверку",
   "mountingDate": "Дата установки после поверки",

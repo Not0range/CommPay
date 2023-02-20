@@ -49,6 +49,7 @@
   "prevValue": "Previous measurment value",
   "currentValue": "Current measurment value",
   "noConsumption": "No consumtion",
+  "photoAttached": "Photo attached count",
 
   "unmountingDate": "Unmounting date",
   "mountingDate": "Mounting date",
