@@ -85,6 +85,8 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
             focusNode: focus,
             textInputAction: TextInputAction.search,
             onSubmitted: (_) => _search(),
+            decoration: InputDecoration(
+                hintText: AppLocalizations.of(context)!.serialNumber),
           ),
         ),
         actions: [

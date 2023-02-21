@@ -139,6 +139,8 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
                         focusNode: focus,
                         controller: controller,
                         onChanged: _setSearchText,
+                        decoration: InputDecoration(
+                            hintText: AppLocalizations.of(context)!.search),
                       ),
                     ),
                     actions: [
