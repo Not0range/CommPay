@@ -13,6 +13,7 @@ class TextInput extends StatefulWidget {
   final String? subText;
   final TextStyle? textStyle;
   final TextStyle? subTextStyle;
+  final Widget? iconButton;
 
   const TextInput(
       {super.key,
@@ -26,7 +27,8 @@ class TextInput extends StatefulWidget {
       this.obscureText = false,
       this.subText,
       this.textStyle,
-      this.subTextStyle});
+      this.subTextStyle,
+      this.iconButton});
 
   @override
   State<StatefulWidget> createState() => _TextInputState();
@@ -84,7 +86,8 @@ class _TextInputState extends State<TextInput>
             labelText: widget.placeholder,
             errorText:
                 widget.subText?.isEmptyOrSpace ?? true ? null : widget.subText,
-            errorStyle: widget.subTextStyle),
+            errorStyle: widget.subTextStyle,
+            suffixIcon: widget.iconButton),
       ),
     );
   }

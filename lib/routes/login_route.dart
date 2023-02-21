@@ -31,6 +31,7 @@ class _LoginRouteState extends State<LoginRoute> {
   bool login = false;
   bool loading = true;
   bool passwordError = false;
+  bool passwordVisible = false;
 
   @override
   void initState() {
@@ -95,6 +96,12 @@ class _LoginRouteState extends State<LoginRoute> {
   void _setErrorText(bool value) {
     setState(() {
       passwordError = value;
+    });
+  }
+
+  void _setPasswordVisible(bool value) {
+    setState(() {
+      passwordVisible = value;
     });
   }
 
@@ -196,19 +203,24 @@ class _LoginRouteState extends State<LoginRoute> {
                             keyboardType: TextInputType.phone,
                             onChanged: _setPhone),
                         TextInput(
-                            text: password,
-                            placeholder: AppLocalizations.of(context)!.password,
-                            textInputAction: TextInputAction.done,
-                            keyboardType: TextInputType.visiblePassword,
-                            onFocus: () => _setErrorText(false),
-                            onChanged: _setPassword,
-                            onSubmit: (_) => _setErrorText(password.length < 5),
-                            obscureText: true,
-                            subText: passwordError
-                                ? AppLocalizations.of(context)!.passwordLength
-                                : '',
-                            subTextStyle: TextStyle(
-                                color: Theme.of(context).colorScheme.error)),
+                          text: password,
+                          placeholder: AppLocalizations.of(context)!.password,
+                          textInputAction: TextInputAction.done,
+                          keyboardType: TextInputType.visiblePassword,
+                          onFocus: () => _setErrorText(false),
+                          onChanged: _setPassword,
+                          onSubmit: (_) => _setErrorText(password.length < 5),
+                          obscureText: !passwordVisible,
+                          subText: passwordError
+                              ? AppLocalizations.of(context)!.passwordLength
+                              : '',
+                          subTextStyle: TextStyle(
+                              color: Theme.of(context).colorScheme.error),
+                          iconButton: IconButton(
+                              onPressed: () =>
+                                  _setPasswordVisible(!passwordVisible),
+                              icon: const Icon(Icons.remove_red_eye)),
+                        ),
                         Row(
                           children: [
                             Checkbox(value: remember, onChanged: _setRemember),
