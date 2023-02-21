@@ -219,7 +219,9 @@ class _LoginRouteState extends State<LoginRoute> {
                           iconButton: IconButton(
                               onPressed: () =>
                                   _setPasswordVisible(!passwordVisible),
-                              icon: const Icon(Icons.remove_red_eye)),
+                              icon: Icon(passwordVisible
+                                  ? Icons.remove_red_eye
+                                  : Icons.remove_red_eye_outlined)),
                         ),
                         Row(
                           children: [
