@@ -78,8 +78,8 @@ class _DatePickerState extends State<DatePicker>
                       widget.date != null
                           ? DateFormat('dd.MM.yy').format(widget.date!)
                           : '',
-                      style: const TextStyle(
-                              color: Colors.black,
+                      style: TextStyle(
+                              color: Theme.of(context).colorScheme.onPrimary,
                               fontWeight: FontWeight.normal)
                           .merge(widget.textStyle)),
                 ),
@@ -101,7 +101,7 @@ class _DatePickerState extends State<DatePicker>
               child: Text(widget.placeholder,
                   style: TextStyle(
                       fontSize: animation.value,
-                      color: Colors.black,
+                      color: Theme.of(context).hintColor,
                       fontWeight: FontWeight.normal)),
             ),
           )

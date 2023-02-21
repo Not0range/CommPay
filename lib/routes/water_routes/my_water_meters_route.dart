@@ -194,9 +194,6 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
                               title: list[i].title,
                               prev: list[i].prevMeasurment,
                               last: list[i].lastMeasurment,
-                              backgroundColor: i % 2 == 0
-                                  ? Colors.green[200]!
-                                  : Colors.blue[200]!,
                               onTap: () => _goToMeasurment(context, list[i]),
                             )),
                   ),

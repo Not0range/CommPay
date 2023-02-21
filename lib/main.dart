@@ -14,8 +14,9 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(body: LoginRoute()),
+    return MaterialApp(
+      home: const Scaffold(body: LoginRoute()),
+      darkTheme: ThemeData.dark(),
       supportedLocales: AppLocalizations.supportedLocales,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
     );

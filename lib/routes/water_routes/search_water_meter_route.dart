@@ -79,7 +79,8 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
       appBar: AppBar(
         title: Container(
           decoration: BoxDecoration(
-              color: Colors.white, borderRadius: BorderRadius.circular(5)),
+              color: Theme.of(context).colorScheme.background,
+              borderRadius: BorderRadius.circular(5)),
           child: TextField(
             onChanged: _onChanged,
             focusNode: focus,
@@ -113,9 +114,6 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
                                 title: meters[i].title,
                                 prev: meters[i].prevMeasurment,
                                 last: meters[i].lastMeasurment,
-                                backgroundColor: i % 2 == 0
-                                    ? Colors.green[200]!
-                                    : Colors.blue[200]!,
                                 onTap: () =>
                                     _goToMeasurment(context, meters[i]),
                               )),
