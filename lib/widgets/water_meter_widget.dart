@@ -11,6 +11,7 @@ class WaterMeterWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: double.maxFinite,
       padding: const EdgeInsets.symmetric(
         horizontal: 12,
         vertical: 8,

@@ -26,7 +26,7 @@ class _SendingPhotoRoute extends State<SendingPhotoRoute> {
   Future _sendData() async {
     if (loading) return;
     _setLoading(true);
-    await Future.delayed(const Duration(seconds: 2));
+    await Future.delayed(const Duration(seconds: 2)); //TODO sending data
     _clearQueue();
     _setLoading(false);
   }
@@ -35,39 +35,48 @@ class _SendingPhotoRoute extends State<SendingPhotoRoute> {
     Provider.of<AppModel>(context, listen: false).clear();
   }
 
+  Future<bool> _willPop() async {
+    if (loading) return false;
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     var count =
         Provider.of<AppModel>(context, listen: false).photosToSend.length;
-    return Scaffold(
-      appBar: AppBar(title: Text(AppLocalizations.of(context)!.sendingPhotos)),
-      body: OverlayWidget(
-        overlay: loading
-            ? Container(
-                color: Colors.black.withAlpha(150),
-                alignment: Alignment.center,
-                width: double.maxFinite,
-                height: double.maxFinite,
-                child: const LoadingIndicator(),
-              )
-            : Container(),
-        child: Consumer<AppModel>(builder: (ctx, model, child) {
-          return ListView.builder(
-            itemCount: model.photosToSend.length,
-            itemBuilder: (context, index) {
-              var item = model.photosToSend[index];
-              return PhotoSendItem(
-                  title: item.meter.title,
-                  date: item.date,
-                  photoCount: item.paths.length);
-            },
-          );
-        }),
+    return WillPopScope(
+      onWillPop: _willPop,
+      child: Scaffold(
+        appBar:
+            AppBar(title: Text(AppLocalizations.of(context)!.sendingPhotos)),
+        body: OverlayWidget(
+          overlay: loading
+              ? Container(
+                  color: Colors.black.withAlpha(150),
+                  alignment: Alignment.center,
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  child: const LoadingIndicator(),
+                )
+              : Container(),
+          child: Consumer<AppModel>(builder: (ctx, model, child) {
+            return ListView.builder(
+              itemCount: model.photosToSend.length,
+              itemBuilder: (context, index) {
+                var item = model.photosToSend[index];
+                return PhotoSendItem(
+                    title: item.meter.title,
+                    date: item.date,
+                    photoCount: item.paths.length);
+              },
+            );
+          }),
+        ),
+        floatingActionButton: count > 0
+            ? FloatingActionButton(
+                onPressed: _sendData, child: const Icon(Icons.upload))
+            : null,
       ),
-      floatingActionButton: count > 0
-          ? FloatingActionButton(
-              onPressed: _sendData, child: const Icon(Icons.upload))
-          : null,
     );
   }
 }

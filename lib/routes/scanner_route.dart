@@ -22,11 +22,9 @@ class _ScannerRouteState extends State<ScannerRoute> {
   }
 
   void close(String? result) {
-    if (!mounted) return;
-    if (!_haveResult) {
-      Navigator.pop(context, result);
-      _haveResult = true;
-    }
+    if (!mounted || _haveResult) return;
+    Navigator.pop(context, result);
+    _haveResult = true;
   }
 
   @override
@@ -35,15 +33,58 @@ class _ScannerRouteState extends State<ScannerRoute> {
     super.dispose();
   }
 
+  Widget _getMask(Orientation orientation) {
+    if (orientation == Orientation.landscape) {
+      return Row(children: [
+        Expanded(child: Container()),
+        Expanded(
+            child: AspectRatio(
+          aspectRatio: 1,
+          child: Stack(
+              fit: StackFit.expand,
+              children: List<Widget>.generate(4, _aimWidget)),
+        )),
+        Expanded(child: Container())
+      ]);
+    } else {
+      return Column(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          Expanded(
+              flex: 1,
+              child: Container(
+                color: Colors.black.withAlpha(150),
+              )),
+          Expanded(
+            flex: 4,
+            child: Row(children: [
+              Expanded(child: Container()),
+              Expanded(
+                flex: 6,
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Stack(
+                      fit: StackFit.expand,
+                      children: List<Widget>.generate(4, _aimWidget)),
+                ),
+              ),
+              Expanded(child: Container())
+            ]),
+          ),
+          Expanded(
+              flex: 1,
+              child: Container(
+                color: Colors.black.withAlpha(150),
+              ))
+        ],
+      );
+    }
+  }
+
   Widget _aimWidget(int index) {
     var bs = BorderSide(color: Theme.of(context).primaryColor, width: 10);
-    var rotate = index == 2
-        ? 3
-        : index == 3
-            ? 2
-            : index;
     return RotatedBox(
-      quarterTurns: rotate,
+      quarterTurns: index,
       child: Container(
         decoration: BoxDecoration(
           border: Border(left: bs, top: bs),
@@ -74,7 +115,6 @@ class _ScannerRouteState extends State<ScannerRoute> {
 
   @override
   Widget build(BuildContext context) {
-    var marginH = MediaQuery.of(context).size.width / 8;
     return Scaffold(
         appBar: AppBar(
           title: Text(AppLocalizations.of(context)!.aimToQr),
@@ -88,40 +128,8 @@ class _ScannerRouteState extends State<ScannerRoute> {
         ),
         body: OrientationBuilder(
           builder: (ctx, orientation) {
-            Widget mask = const SizedBox(
-              height: double.maxFinite,
-              width: double.maxFinite,
-            );
-            if (orientation == Orientation.portrait) {
-              mask = Column(
-                mainAxisSize: MainAxisSize.max,
-                children: [
-                  Expanded(
-                      flex: 1,
-                      child: Container(
-                        color: Colors.black.withAlpha(150),
-                      )),
-                  Expanded(
-                    flex: 4,
-                    child: Container(
-                      margin: EdgeInsets.symmetric(horizontal: marginH),
-                      alignment: Alignment.center,
-                      child: AspectRatio(
-                        aspectRatio: 1,
-                        child: GridView.count(
-                            crossAxisCount: 2,
-                            children: List<Widget>.generate(4, _aimWidget)),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                      flex: 1,
-                      child: Container(
-                        color: Colors.black.withAlpha(150),
-                      ))
-                ],
-              );
-            }
+            Widget mask = _getMask(orientation);
+
             return Stack(
               fit: StackFit.expand,
               children: [

@@ -36,6 +36,7 @@ class WaterMeterItem extends StatelessWidget {
                   right: BorderSide(
                       style: BorderStyle.solid, color: Colors.black))),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Padding(
                 padding: const EdgeInsets.only(bottom: 8),
