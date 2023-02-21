@@ -2,6 +2,8 @@
   "error": "Error",
   "ok": "OK",
   "cancel": "Cancel",
+  "yes": "Yes",
+  "no": "No",
   "notImplemnted": "Not Implemnted",
   "loading": "Loading...",
   "searchInvite": "Type query an press search button",
@@ -26,6 +28,8 @@
   "password": "Password",
   "remember": "Remember me",
   "login": "Login",
+  "logout": "Logout",
+  "logoutQuestion": "Are you sure?",
   "passwordLength": "Password must be contains at least 5 characters",
 
   "watterSupply": "Watter Supply",

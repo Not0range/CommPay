@@ -1,5 +1,7 @@
 import 'package:com_pay/menus/water_menu.dart';
+import 'package:com_pay/routes/login_route.dart';
 import 'package:com_pay/routes/sending_photos_route.dart';
+import 'package:com_pay/utils.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -59,12 +61,26 @@ class _MainRouteState extends State<MainRoute> {
         MaterialPageRoute(builder: (ctx) => const SendingPhotoRoute()));
   }
 
+  Future _logout() async {
+    showErrorDialog(context, AppLocalizations.of(context)!.logout,
+        AppLocalizations.of(context)!.logoutQuestion, {
+      AppLocalizations.of(context)!.yes: DialogResult.ok,
+      AppLocalizations.of(context)!.no: DialogResult.cancel
+    }).then((result) async {
+      if (result == DialogResult.ok) {
+        await Navigator.of(context).pushReplacement(
+            MaterialPageRoute(builder: (ctx) => const LoginRoute()));
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     var buttons = _tabButtons(context);
     return Scaffold(
       appBar: AppBar(
         title: Text(buttons[selectedTab].label!),
+        leading: IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
         actions: [
           IconButton(
               onPressed: _goToPhotoSending,
