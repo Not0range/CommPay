@@ -168,68 +168,71 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                 child: RetryWidget(
                 onPressed: _getReplacementData,
               ))
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                    WaterMeterWidget(widget.meter),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                      child: Column(
-                        children: [
-                          SizeTransition(
-                            sizeFactor: animation,
-                            axisAlignment: -1,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: TextInput(
-                                    text: serial,
-                                    placeholder: AppLocalizations.of(context)!
-                                        .serialNumber,
-                                    keyboardType: TextInputType.number,
-                                    onChanged: _setSerial,
-                                    subText: _getErrorText(serialError),
-                                    subTextStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error),
+            : SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      WaterMeterWidget(widget.meter),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 8, right: 8, top: 8),
+                        child: Column(
+                          children: [
+                            SizeTransition(
+                              sizeFactor: animation,
+                              axisAlignment: -1,
+                              child: Column(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: TextInput(
+                                      text: serial,
+                                      placeholder: AppLocalizations.of(context)!
+                                          .serialNumber,
+                                      keyboardType: TextInputType.number,
+                                      onChanged: _setSerial,
+                                      subText: _getErrorText(serialError),
+                                      subTextStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error),
+                                    ),
                                   ),
-                                ),
-                                DatePicker(
-                                  placeholder: AppLocalizations.of(context)!
-                                      .replacementDate,
-                                  date: replacementDate,
-                                  onChange: _setReplacementDate,
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 8),
-                                  child: TextInput(
-                                    text: value,
+                                  DatePicker(
                                     placeholder: AppLocalizations.of(context)!
-                                        .newMeterValue,
-                                    keyboardType: TextInputType.number,
-                                    onChanged: _setValue,
-                                    subText: _getErrorText(valueError),
-                                    subTextStyle: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .error),
+                                        .replacementDate,
+                                    date: replacementDate,
+                                    onChange: _setReplacementDate,
                                   ),
-                                ),
-                              ],
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 8),
+                                    child: TextInput(
+                                      text: value,
+                                      placeholder: AppLocalizations.of(context)!
+                                          .newMeterValue,
+                                      keyboardType: TextInputType.number,
+                                      onChanged: _setValue,
+                                      subText: _getErrorText(valueError),
+                                      subTextStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .error),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          RowSwitch(
-                            state: replace,
-                            onChanged: _setReplace,
-                            text: AppLocalizations.of(context)!.replaceMeter,
-                          ),
-                        ],
-                      ),
-                    )
-                  ]);
+                            RowSwitch(
+                              state: replace,
+                              onChanged: _setReplace,
+                              text: AppLocalizations.of(context)!.replaceMeter,
+                            ),
+                          ],
+                        ),
+                      )
+                    ]),
+              );
   }
 }
 

@@ -159,76 +159,79 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
         ? const Center(
             child: LoadingIndicator(),
           )
-        : Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              WaterMeterWidget(widget.meter),
-              Padding(
-                padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                child: Column(
-                  children: [
-                    DatePicker(
-                      placeholder: AppLocalizations.of(context)!.prevDate,
-                      date: widget.meter.prevMeasurment,
-                    ),
-                    TextInput(
-                      text: prevValue.toString(),
-                      placeholder: AppLocalizations.of(context)!.prevValue,
-                      keyboardType: TextInputType.number,
-                    ),
-                    DatePicker(
-                        placeholder: AppLocalizations.of(context)!.currentDate,
-                        minDate: widget.meter.prevMeasurment,
-                        date: last,
-                        onChange: _setLastDate,
-                        subText: widget.meter.prevMeasurment == last
-                            ? AppLocalizations.of(context)!.sameDates
-                            : '',
-                        textStyle: widget.meter.prevMeasurment == last
-                            ? TextStyle(
-                                color: Theme.of(context).colorScheme.error)
-                            : null,
-                        subTextStyle: TextStyle(
-                            color: Theme.of(context).colorScheme.error)),
-                    SizeTransition(
-                      sizeFactor: animation,
-                      axisAlignment: -1,
-                      child: TextInput(
-                          text: lastValue,
+        : SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                WaterMeterWidget(widget.meter),
+                Padding(
+                  padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
+                  child: Column(
+                    children: [
+                      DatePicker(
+                        placeholder: AppLocalizations.of(context)!.prevDate,
+                        date: widget.meter.prevMeasurment,
+                      ),
+                      TextInput(
+                        text: prevValue.toString(),
+                        placeholder: AppLocalizations.of(context)!.prevValue,
+                        keyboardType: TextInputType.number,
+                      ),
+                      DatePicker(
                           placeholder:
-                              AppLocalizations.of(context)!.currentValue,
-                          keyboardType: TextInputType.number,
-                          onChanged: _setLastValue,
-                          textStyle: lastValueError != ErrorType.none
+                              AppLocalizations.of(context)!.currentDate,
+                          minDate: widget.meter.prevMeasurment,
+                          date: last,
+                          onChange: _setLastDate,
+                          subText: widget.meter.prevMeasurment == last
+                              ? AppLocalizations.of(context)!.sameDates
+                              : '',
+                          textStyle: widget.meter.prevMeasurment == last
                               ? TextStyle(
                                   color: Theme.of(context).colorScheme.error)
                               : null,
-                          subText: _getErrorText(),
                           subTextStyle: TextStyle(
                               color: Theme.of(context).colorScheme.error)),
-                    ),
-                    RowSwitch(
-                      state: noConsumption,
-                      onChanged: _setNoConsumption,
-                      text: AppLocalizations.of(context)!.noConsumption,
-                    ),
-                    Row(children: [
-                      count > 0
-                          ? Text(
-                              '${AppLocalizations.of(context)!.photoAttached}: '
-                              '$count',
-                            )
-                          : Text(
-                              AppLocalizations.of(context)!.needPhoto,
-                              style: TextStyle(
-                                  color: Theme.of(context).colorScheme.error),
-                            )
-                    ])
-                  ],
-                ),
-              )
-            ],
+                      SizeTransition(
+                        sizeFactor: animation,
+                        axisAlignment: -1,
+                        child: TextInput(
+                            text: lastValue,
+                            placeholder:
+                                AppLocalizations.of(context)!.currentValue,
+                            keyboardType: TextInputType.number,
+                            onChanged: _setLastValue,
+                            textStyle: lastValueError != ErrorType.none
+                                ? TextStyle(
+                                    color: Theme.of(context).colorScheme.error)
+                                : null,
+                            subText: _getErrorText(),
+                            subTextStyle: TextStyle(
+                                color: Theme.of(context).colorScheme.error)),
+                      ),
+                      RowSwitch(
+                        state: noConsumption,
+                        onChanged: _setNoConsumption,
+                        text: AppLocalizations.of(context)!.noConsumption,
+                      ),
+                      Row(children: [
+                        count > 0
+                            ? Text(
+                                '${AppLocalizations.of(context)!.photoAttached}: '
+                                '$count',
+                              )
+                            : Text(
+                                AppLocalizations.of(context)!.needPhoto,
+                                style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error),
+                              )
+                      ])
+                    ],
+                  ),
+                )
+              ],
+            ),
           );
   }
 }

@@ -128,46 +128,49 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
             ? Center(
                 child: RetryWidget(onPressed: _getVerificationData),
               )
-            : Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                    WaterMeterWidget(widget.meter),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
-                      child: Column(
-                        children: [
-                          SizeTransition(
-                            sizeFactor: animation,
-                            axisAlignment: -1,
-                            child: Column(
-                              children: [
-                                DatePicker(
-                                  placeholder: AppLocalizations.of(context)!
-                                      .unmountingDate,
-                                  date: unmountDate,
-                                  onChange: _setUnmountDate,
-                                ),
-                                DatePicker(
-                                  placeholder: AppLocalizations.of(context)!
-                                      .mountingDate,
-                                  date: installDate,
-                                  minDate: unmountDate,
-                                  onChange: unmountDate != null
-                                      ? _setInstallDate
-                                      : null,
-                                ),
-                              ],
+            : SingleChildScrollView(
+                child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      WaterMeterWidget(widget.meter),
+                      Padding(
+                        padding:
+                            const EdgeInsets.only(left: 8, right: 8, top: 8),
+                        child: Column(
+                          children: [
+                            SizeTransition(
+                              sizeFactor: animation,
+                              axisAlignment: -1,
+                              child: Column(
+                                children: [
+                                  DatePicker(
+                                    placeholder: AppLocalizations.of(context)!
+                                        .unmountingDate,
+                                    date: unmountDate,
+                                    onChange: _setUnmountDate,
+                                  ),
+                                  DatePicker(
+                                    placeholder: AppLocalizations.of(context)!
+                                        .mountingDate,
+                                    date: installDate,
+                                    minDate: unmountDate,
+                                    onChange: unmountDate != null
+                                        ? _setInstallDate
+                                        : null,
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          RowSwitch(
-                            state: unmount,
-                            onChanged: _setUnmount,
-                            text: AppLocalizations.of(context)!.unmount,
-                          ),
-                        ],
-                      ),
-                    )
-                  ]);
+                            RowSwitch(
+                              state: unmount,
+                              onChanged: _setUnmount,
+                              text: AppLocalizations.of(context)!.unmount,
+                            ),
+                          ],
+                        ),
+                      )
+                    ]),
+              );
   }
 }
