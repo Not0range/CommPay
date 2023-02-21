@@ -6,29 +6,27 @@ class PhotoSendItem extends StatelessWidget {
   final String title;
   final DateTime date;
   final int photoCount;
+  final VoidCallback? onTap;
 
   const PhotoSendItem(
       {super.key,
       required this.title,
       required this.date,
-      required this.photoCount});
+      required this.photoCount,
+      this.onTap});
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(border: Border.all()),
-      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Text(title),
-        ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-          child: Text('${AppLocalizations.of(context)!.photoDate}: '
+    return ListTile(
+      onTap: onTap,
+      title: Text(title),
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('${AppLocalizations.of(context)!.photoDate}: '
               '${DateFormat('dd.MM.yyyy').format(date)}'),
-        ),
-        Text('${AppLocalizations.of(context)!.fileInQueue}: $photoCount')
-      ]),
+          Text('${AppLocalizations.of(context)!.fileInQueue}: $photoCount')
+        ],
+      ),
     );
   }
 }

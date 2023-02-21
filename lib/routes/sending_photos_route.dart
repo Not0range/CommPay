@@ -1,4 +1,6 @@
 import 'package:com_pay/app_model.dart';
+import 'package:com_pay/entities/photo_send.dart';
+import 'package:com_pay/routes/photo_route.dart';
 import 'package:com_pay/widgets/overlay_widget.dart';
 import 'package:com_pay/widgets/photo_send_item.dart';
 import 'package:flutter/material.dart';
@@ -40,6 +42,11 @@ class _SendingPhotoRoute extends State<SendingPhotoRoute> {
     return true;
   }
 
+  Future _goToPhotos(PhotoSend ps) async {
+    await Navigator.of(context).push(MaterialPageRoute(
+        builder: (ctx) => PhotoRoute(photosToSend: ps, title: ps.meter.title)));
+  }
+
   @override
   Widget build(BuildContext context) {
     var count =
@@ -65,9 +72,11 @@ class _SendingPhotoRoute extends State<SendingPhotoRoute> {
               itemBuilder: (context, index) {
                 var item = model.photosToSend[index];
                 return PhotoSendItem(
-                    title: item.meter.title,
-                    date: item.date,
-                    photoCount: item.paths.length);
+                  title: item.meter.title,
+                  date: item.date,
+                  photoCount: item.paths.length,
+                  onTap: () => _goToPhotos(item),
+                );
               },
             );
           }),
