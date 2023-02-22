@@ -52,7 +52,7 @@ class _DatePickerState extends State<DatePicker>
             initialDate: widget.date ?? DateTime.now(),
             firstDate:
                 widget.minDate != null ? widget.minDate! : DateTime(1960),
-            lastDate: DateTime.now()));
+            lastDate: DateTime(2100)));
     if (d == null) return;
     widget.onChange?.call(d);
     controller.forward();
