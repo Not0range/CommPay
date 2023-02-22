@@ -7,7 +7,6 @@ import 'package:http/http.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../entities/water/water_meter.dart';
-import '../../widgets/loading_indicator.dart';
 import '../../widgets/water_meter_item.dart';
 
 class SearchWaterMeterRoute extends StatefulWidget {
@@ -96,7 +95,7 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
       ),
       body: loading
           ? const Center(
-              child: LoadingIndicator(),
+              child: CircularProgressIndicator(),
             )
           : GestureDetector(
               onTap: () => FocusScope.of(context).unfocus(),

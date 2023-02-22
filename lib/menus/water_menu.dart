@@ -9,7 +9,6 @@ import 'package:com_pay/api.dart' as api;
 
 import '../routes/water_routes/search_water_meter_route.dart';
 import '../routes/water_routes/water_meter_route.dart';
-import '../widgets/loading_indicator.dart';
 
 class WaterMenu extends StatefulWidget {
   final String keyString;
@@ -80,7 +79,7 @@ class _WaterMenuState extends State<WaterMenu> {
               alignment: Alignment.center,
               width: double.maxFinite,
               height: double.maxFinite,
-              child: const LoadingIndicator(),
+              child: const CircularProgressIndicator(),
             )
           : Container(),
       child: ListView(

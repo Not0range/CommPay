@@ -11,8 +11,6 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:com_pay/utils.dart';
 
-import '../../widgets/loading_indicator.dart';
-
 class WaterMeterRoute extends StatefulWidget {
   final String keyString;
   final WaterMeter meter;
@@ -158,7 +156,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
         onTap: () => FocusScope.of(context).unfocus(),
         child: loading
             ? const Center(
-                child: LoadingIndicator(),
+                child: CircularProgressIndicator(),
               )
             : _tabs(selectedTab),
       ),

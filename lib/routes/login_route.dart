@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:com_pay/entities/photo_send.dart';
 import 'package:com_pay/utils.dart';
-import 'package:com_pay/widgets/loading_indicator.dart';
 import 'package:com_pay/widgets/overlay_widget.dart';
 import 'package:com_pay/widgets/text_input.dart';
 import 'package:flutter/material.dart';
@@ -166,12 +165,12 @@ class _LoginRouteState extends State<LoginRoute> {
                   alignment: Alignment.center,
                   width: double.maxFinite,
                   height: double.maxFinite,
-                  child: const LoadingIndicator(),
+                  child: const CircularProgressIndicator(),
                 )
               : Container(),
           child: loading
               ? const Center(
-                  child: LoadingIndicator(),
+                  child: CircularProgressIndicator(),
                 )
               : GestureDetector(
                   onTap: () => FocusScope.of(context).unfocus(),

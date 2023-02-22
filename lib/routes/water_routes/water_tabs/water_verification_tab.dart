@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart';
 
 import '../../../widgets/date_picker.dart';
-import '../../../widgets/loading_indicator.dart';
+
 import '../../../widgets/row_switch.dart';
 import '../../../widgets/water_meter_widget.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -122,7 +122,7 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
   Widget build(BuildContext context) {
     return loading
         ? const Center(
-            child: LoadingIndicator(),
+            child: CircularProgressIndicator(),
           )
         : error
             ? Center(

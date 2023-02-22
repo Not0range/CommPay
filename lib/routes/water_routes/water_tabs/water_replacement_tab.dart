@@ -9,7 +9,7 @@ import '../../../entities/water/water_meter.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
 import '../../../widgets/date_picker.dart';
-import '../../../widgets/loading_indicator.dart';
+
 import '../../../widgets/row_switch.dart';
 import '../../../widgets/text_input.dart';
 import 'package:com_pay/api.dart' as api;
@@ -161,7 +161,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   Widget build(BuildContext context) {
     return loading
         ? const Center(
-            child: LoadingIndicator(),
+            child: CircularProgressIndicator(),
           )
         : error
             ? Center(

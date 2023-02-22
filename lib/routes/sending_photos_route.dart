@@ -7,8 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 
-import '../widgets/loading_indicator.dart';
-
 class SendingPhotoRoute extends StatefulWidget {
   const SendingPhotoRoute({super.key});
 
@@ -63,7 +61,7 @@ class _SendingPhotoRoute extends State<SendingPhotoRoute> {
                   alignment: Alignment.center,
                   width: double.maxFinite,
                   height: double.maxFinite,
-                  child: const LoadingIndicator(),
+                  child: const CircularProgressIndicator(),
                 )
               : Container(),
           child: Consumer<AppModel>(builder: (ctx, model, child) {

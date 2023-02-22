@@ -7,7 +7,7 @@ import 'package:http/http.dart';
 
 import '../../../utils.dart';
 import '../../../widgets/date_picker.dart';
-import '../../../widgets/loading_indicator.dart';
+
 import '../../../widgets/text_input.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:com_pay/api.dart' as api;
@@ -157,7 +157,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
     var count = getPhotoCount(context, widget.meter.id);
     return loading
         ? const Center(
-            child: LoadingIndicator(),
+            child: CircularProgressIndicator(),
           )
         : SingleChildScrollView(
             child: Column(
