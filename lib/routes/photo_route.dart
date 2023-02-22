@@ -18,12 +18,14 @@ class _PhotoRouteState extends State<PhotoRoute> {
   Future _goToFullscreen(int index, String path) async {
     await Navigator.of(context).push(MaterialPageRoute(
         builder: (ctx) => Scaffold(
-              body: GestureDetector(
-                onTap: Navigator.of(context).pop,
-                child: Center(
-                  child: Hero(
-                    tag: 'img$index',
-                    child: Image.file(File(path), fit: BoxFit.fill),
+              body: InteractiveViewer(
+                child: GestureDetector(
+                  onTap: Navigator.of(context).pop,
+                  child: Center(
+                    child: Hero(
+                      tag: 'img$index',
+                      child: Image.file(File(path), fit: BoxFit.fill),
+                    ),
                   ),
                 ),
               ),
