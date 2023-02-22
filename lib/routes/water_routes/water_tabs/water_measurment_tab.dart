@@ -35,6 +35,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   bool loading = false;
   bool error = false;
 
+  late DateTime prev;
   late DateTime last;
   int prevValue = 0;
   String lastValue = '';
@@ -68,6 +69,9 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
         setState(() {
           prevValue = m.prevValue!;
           lastValue = m.currentValue.toString();
+
+          prev = m.prevDate ?? widget.meter.lastMeasurment;
+          last = m.currentDate;
           noConsumption = m.noConsumption;
           if (noConsumption) controller.value = 0;
           loading = false;
@@ -85,6 +89,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   void _setLastDate(DateTime value) {
     setState(() {
       last = value;
+      _checkValues();
     });
   }
 

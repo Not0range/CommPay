@@ -1,11 +1,13 @@
 import 'package:com_pay/api.dart';
 import 'package:com_pay/app_model.dart';
 import 'package:com_pay/entities/photo_send.dart';
+import 'package:com_pay/entities/success_response.dart';
 import 'package:com_pay/entities/water/water_meter.dart';
 import 'package:com_pay/routes/water_routes/water_tabs/water_measurment_tab.dart';
 import 'package:com_pay/routes/water_routes/water_tabs/water_replacement_tab.dart';
 import 'package:com_pay/routes/water_routes/water_tabs/water_verification_tab.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:provider/provider.dart';
@@ -27,6 +29,7 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
   List<dynamic> results = List.generate(3, (_) => null);
   int selectedTab = 0;
   bool loading = false;
+  bool needReload = false;
 
   @override
   void initState() {
@@ -64,14 +67,37 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
     FocusScope.of(context).unfocus();
     _setLoading(true);
 
-    if (selectedTab == 0) {
-      await addMeasurment(results[0]);
-    } else if (selectedTab == 1) {
-      await addVerification(results[1]);
-    } else if (selectedTab == 2) {
-      await addReplacement(results[2]);
+    SuccessResponse? result;
+    try {
+      if (selectedTab == 0) {
+        result = await addMeasurment(results[0]);
+      } else if (selectedTab == 1) {
+        result = await addVerification(results[1]);
+      } else if (selectedTab == 2) {
+        result = await addReplacement(results[2]);
+      }
+      if (result == null || !result.isSuccess) {
+        Future.delayed(Duration.zero).then((value) {
+          showErrorDialog(
+              context,
+              AppLocalizations.of(context)!.error,
+              result?.errorMessage ??
+                  AppLocalizations.of(context)!.errorLoadingData,
+              {AppLocalizations.of(context)!.ok: DialogResult.ok});
+          _setLoading(false);
+        });
+      } else {
+        if (selectedTab == 0) needReload = true;
+        _setLoading(false);
+      }
+    } on ClientException catch (_) {
+      showErrorDialog(
+          context,
+          AppLocalizations.of(context)!.error,
+          AppLocalizations.of(context)!.networkError,
+          {AppLocalizations.of(context)!.ok: DialogResult.ok});
+      _setLoading(false);
     }
-    _setLoading(false);
   }
 
   List<BottomNavigationBarItem> _tabButtons(BuildContext context) {
@@ -138,38 +164,47 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
         : 0;
   }
 
+  Future<bool> _willPop() async {
+    if (loading) return false;
+    Navigator.pop(context, needReload);
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     var buttons = _tabButtons(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(buttons[selectedTab].label ?? ''),
-        actions: selectedTab == 0
-            ? [
-                IconButton(
-                    onPressed: _takePhoto, icon: const Icon(Icons.camera_alt))
-              ]
-            : [],
+    return WillPopScope(
+      onWillPop: _willPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(buttons[selectedTab].label ?? ''),
+          actions: selectedTab == 0
+              ? [
+                  IconButton(
+                      onPressed: _takePhoto, icon: const Icon(Icons.camera_alt))
+                ]
+              : [],
+        ),
+        body: GestureDetector(
+          onTap: () => FocusScope.of(context).unfocus(),
+          child: loading
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : _tabs(selectedTab),
+        ),
+        bottomNavigationBar: BottomNavigationBar(
+          items: _tabButtons(context),
+          currentIndex: selectedTab,
+          onTap: _tabTap,
+        ),
+        floatingActionButton: AnimatedScale(
+            duration: const Duration(milliseconds: 200),
+            scale: _getScale(context),
+            child: FloatingActionButton(
+                onPressed: _save, child: const Icon(Icons.save))),
       ),
-      body: GestureDetector(
-        onTap: () => FocusScope.of(context).unfocus(),
-        child: loading
-            ? const Center(
-                child: CircularProgressIndicator(),
-              )
-            : _tabs(selectedTab),
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: _tabButtons(context),
-        currentIndex: selectedTab,
-        onTap: _tabTap,
-      ),
-      floatingActionButton: AnimatedScale(
-          duration: const Duration(milliseconds: 200),
-          scale: _getScale(context),
-          child: FloatingActionButton(
-              onPressed: _save, child: const Icon(Icons.save))),
     );
   }
 }

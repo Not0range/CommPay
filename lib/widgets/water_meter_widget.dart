@@ -16,7 +16,6 @@ class WaterMeterWidget extends StatelessWidget {
         horizontal: 12,
         vertical: 8,
       ),
-      decoration: BoxDecoration(border: Border.all()),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
@@ -31,6 +30,9 @@ class WaterMeterWidget extends StatelessWidget {
           padding: const EdgeInsets.only(bottom: 8),
           child: Text('${AppLocalizations.of(context)!.objectId}: '
               '${meter.id}'),
+        ),
+        const Divider(
+          thickness: 2,
         )
       ]),
     );

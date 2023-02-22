@@ -9,14 +9,18 @@ import 'package:http/http.dart' as http;
 import 'entities/water/water_meter.dart';
 
 const String _baseUrl = 'https://commpay.idc.md/api/v1';
-const String _tempKey = '1762';
+const String _tempKey = '2662';
+const Map<String, String> _defaultHeaders = {
+  'Content-Type': 'application/json;charset=utf-8'
+};
 
+//TODO login
 Future<String> login(String phone, String password) async {
   await Future.delayed(const Duration(seconds: 1));
   return 'key';
 }
 
-Future<List<WaterMeter>> getWaterMeters(String key) async {
+Future<List<WaterMeter>> getWaterMeters(String userId) async {
   http.Response res = await http
       .get(Uri.parse('$_baseUrl/water/get_counters_by_user_id/$_tempKey'));
   List<dynamic> meters = jsonDecode(res.body);
@@ -26,10 +30,10 @@ Future<List<WaterMeter>> getWaterMeters(String key) async {
       .toList();
 }
 
-Future<List<WaterMeter>> searchWaterMeter(String key, String text) async {
+Future<List<WaterMeter>> searchWaterMeter(String userId, String text) async {
   http.Response res = await http.post(
       Uri.parse('$_baseUrl/water/get_counters_by_serial_number'),
-      headers: {'Content-Type': 'application/json;charset=utf-8'},
+      headers: _defaultHeaders,
       body: jsonEncode({'serial_number': text, 'user_id': _tempKey}));
   List<dynamic> meters = jsonDecode(res.body);
   return meters
@@ -38,7 +42,7 @@ Future<List<WaterMeter>> searchWaterMeter(String key, String text) async {
       .toList();
 }
 
-Future<MeasurmentWater> getMeasurments(String key, WaterMeter meter) async {
+Future<MeasurmentWater> getMeasurments(String userId, WaterMeter meter) async {
   http.Response res = await http
       .get(Uri.parse('$_baseUrl/water/get_dev_metrics/${meter.id}/$_tempKey'));
   List<dynamic> measurments = jsonDecode(res.body);
@@ -50,7 +54,8 @@ Future<MeasurmentWater> getMeasurments(String key, WaterMeter meter) async {
   return m;
 }
 
-Future<VerificationWater> getVerification(String key, WaterMeter meter) async {
+Future<VerificationWater> getVerification(
+    String userId, WaterMeter meter) async {
   http.Response res = await http
       .get(Uri.parse('$_baseUrl/water/get_dev_verification/${meter.id}'));
   List<dynamic> verifications = jsonDecode(res.body);
@@ -60,7 +65,7 @@ Future<VerificationWater> getVerification(String key, WaterMeter meter) async {
       .first;
 }
 
-Future<ReplacementWater> getReplacemets(String key, WaterMeter meter) async {
+Future<ReplacementWater> getReplacemets(String userId, WaterMeter meter) async {
   http.Response res = await http
       .get(Uri.parse('$_baseUrl/water/get_dev_replacement/${meter.id}'));
   List<dynamic> replacements = jsonDecode(res.body);
@@ -71,46 +76,25 @@ Future<ReplacementWater> getReplacemets(String key, WaterMeter meter) async {
 }
 
 Future<SuccessResponse> addMeasurment(MeasurmentWater measurment) async {
-  var body = measurment.toJson();
-  // ignore: dead_code
-  if (false) {
-    //TODO do real request
-    http.Response res = await http.post(
-        Uri.parse('$_baseUrl/water/save_dev_meters'),
-        headers: {'Content-Type': 'application/json;charset=utf-8'},
-        body: body);
-    return SuccessResponse.fromJson(jsonDecode(res.body));
-  }
-  await Future.delayed(const Duration(seconds: 2));
-  return SuccessResponse(true);
+  http.Response res = await http.post(
+      Uri.parse('$_baseUrl/water/save_dev_metrics'),
+      headers: _defaultHeaders,
+      body: jsonEncode(measurment.toJson()));
+  return SuccessResponse.fromJson(jsonDecode(res.body));
 }
 
 Future<SuccessResponse> addVerification(VerificationWater verification) async {
-  var body = verification.toJson();
-  // ignore: dead_code
-  if (false) {
-    //TODO do real request
-    http.Response res = await http.post(
-        Uri.parse('$_baseUrl/water/save_dev_verification'),
-        headers: {'Content-Type': 'application/json;charset=utf-8'},
-        body: body);
-    return SuccessResponse.fromJson(jsonDecode(res.body));
-  }
-  await Future.delayed(const Duration(seconds: 2));
-  return SuccessResponse(true);
+  http.Response res = await http.post(
+      Uri.parse('$_baseUrl/water/save_dev_verification'),
+      headers: _defaultHeaders,
+      body: jsonEncode(verification.toJson()));
+  return SuccessResponse.fromJson(jsonDecode(res.body));
 }
 
 Future<SuccessResponse> addReplacement(ReplacementWater replacement) async {
-  var body = replacement.toJson();
-  // ignore: dead_code
-  if (false) {
-    //TODO do real request
-    http.Response res = await http.post(
-        Uri.parse('$_baseUrl/water/save_dev_replacement'),
-        headers: {'Content-Type': 'application/json;charset=utf-8'},
-        body: body);
-    return SuccessResponse.fromJson(jsonDecode(res.body));
-  }
-  await Future.delayed(const Duration(seconds: 2));
-  return SuccessResponse(true);
+  http.Response res = await http.post(
+      Uri.parse('$_baseUrl/water/save_dev_replacement'),
+      headers: _defaultHeaders,
+      body: jsonEncode(replacement.toJson()));
+  return SuccessResponse.fromJson(jsonDecode(res.body));
 }

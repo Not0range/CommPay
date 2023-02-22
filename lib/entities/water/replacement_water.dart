@@ -13,7 +13,7 @@ class ReplacementWater {
   Map<String, dynamic> toJson() {
     return {
       "object_id": id,
-      "is_device_replacement": replacement ? '1' : '0',
+      "is_device_replacement": replacement ? 1 : 0,
       "new_serial_number": serial,
       "new_dev_curr_metrics_date":
           date != null ? DateFormat('dd.MM.yy').format(date!) : null,

@@ -11,9 +11,11 @@ class VerificationWater {
   Map<String, dynamic> toJson() {
     return {
       "object_id": id,
-      "is_dev_verification_remove": verification ? '1' : '0',
-      "dev_verification_from_date": DateFormat('dd.MM.yy').format(fromDate!),
-      "dev_verification_to_date": DateFormat('dd.MM.yy').format(toDate!)
+      "is_dev_verification_removal": verification ? 1 : 0,
+      "dev_vefication_from_date":
+          fromDate != null ? DateFormat('dd.MM.yy').format(fromDate!) : null,
+      "dev_vefication_to_date":
+          toDate != null ? DateFormat('dd.MM.yy').format(toDate!) : null
     };
   }
 

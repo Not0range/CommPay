@@ -104,12 +104,13 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
     });
   }
 
-  void _goToMeasurment(BuildContext context, WaterMeter meter) {
-    Navigator.push(
+  Future _goToMeasurment(BuildContext context, WaterMeter meter) async {
+    bool? result = await Navigator.push(
         context,
-        MaterialPageRoute(
+        MaterialPageRoute<bool>(
             builder: (ctx) =>
                 WaterMeterRoute(keyString: widget.keyString, meter: meter)));
+    if (result == null || result) await _loadData();
   }
 
   Future<bool> _willPop() async {

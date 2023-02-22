@@ -69,11 +69,12 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
       var r = await api.getReplacemets(widget.keyString, widget.meter);
       if (mounted) {
         setState(() {
-          _setSerial(r.serial ?? '');
-          _setReplacementDate(r.date);
-          _setValue(r.value?.toString() ?? '');
-          _setReplace(r.replacement);
+          serial = r.serial ?? '';
+          replacementDate = r.date;
+          value = r.value?.toString() ?? '';
+          replace = r.replacement;
           if (replace) controller.value = 1;
+
           loading = false;
           _checkValues();
         });
@@ -94,6 +95,9 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
     }
     setState(() {
       replace = value;
+      serial = '';
+      this.value = '';
+      replacementDate = null;
     });
     _checkValues();
   }
@@ -101,11 +105,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   void _setSerial(String value) {
     setState(() {
       serial = value;
-      if (serial.isEmptyOrSpace) {
-        serialError = ErrorType.emptyValue;
-      } else {
-        serialError = ErrorType.none;
-      }
+
       _checkValues();
     });
   }
@@ -113,13 +113,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   void _setValue(String value) {
     setState(() {
       this.value = value;
-      if (value.isEmptyOrSpace) {
-        valueError = ErrorType.emptyValue;
-      } else if (int.tryParse(value) == null) {
-        valueError = ErrorType.wrongValue;
-      } else {
-        valueError = ErrorType.none;
-      }
+
       _checkValues();
     });
   }
@@ -132,6 +126,19 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
   }
 
   void _checkValues() {
+    if (serial.isEmptyOrSpace) {
+      serialError = ErrorType.emptyValue;
+    } else {
+      serialError = ErrorType.none;
+    }
+
+    if (value.isEmptyOrSpace) {
+      valueError = ErrorType.emptyValue;
+    } else if (int.tryParse(value) == null) {
+      valueError = ErrorType.wrongValue;
+    } else {
+      valueError = ErrorType.none;
+    }
     if (!replace ||
         valueError == ErrorType.none &&
             serialError == ErrorType.none &&

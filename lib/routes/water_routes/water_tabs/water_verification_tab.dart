@@ -87,6 +87,10 @@ class _WaterVerificationTabState extends State<WaterVerificationTab>
     }
     setState(() {
       unmount = value;
+      if (!unmount) {
+        unmountDate = null;
+        installDate = null;
+      }
     });
     _checkValues();
   }
