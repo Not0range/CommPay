@@ -39,7 +39,7 @@ class _DatePickerState extends State<DatePicker>
         value: widget.date != null ? 1 : 0,
         duration: const Duration(milliseconds: animationDuration),
         vsync: this);
-    animation = Tween<double>(begin: 16, end: 10).animate(controller)
+    animation = Tween<double>(begin: 16, end: 12).animate(controller)
       ..addListener(() {
         setState(() {});
       });
@@ -72,15 +72,16 @@ class _DatePickerState extends State<DatePicker>
                 onPressed: widget.onChange != null
                     ? () => _openDatePicker(context)
                     : null,
-                child: SizedBox(
+                child: Container(
+                  padding: const EdgeInsets.symmetric(vertical: 20),
                   width: double.maxFinite,
                   child: Text(
                       widget.date != null
                           ? DateFormat('dd.MM.yy').format(widget.date!)
                           : '',
-                      style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary,
-                              fontWeight: FontWeight.normal)
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleMedium!
                           .merge(widget.textStyle)),
                 ),
               ),
@@ -91,18 +92,25 @@ class _DatePickerState extends State<DatePicker>
             ],
           ),
           AnimatedPositioned(
-            top: widget.date != null ? -30 : 0,
-            left: widget.date != null ? -5 : 4,
+            top: widget.date != null ? -25 : 0,
             duration: const Duration(milliseconds: animationDuration),
             child: TextButton(
               onPressed: widget.onChange != null
                   ? () => _openDatePicker(context)
                   : null,
-              child: Text(widget.placeholder,
-                  style: TextStyle(
-                      fontSize: animation.value,
-                      color: Theme.of(context).hintColor,
-                      fontWeight: FontWeight.normal)),
+              child: Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4),
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Text(widget.placeholder,
+                    style: widget.date == null
+                        ? Theme.of(context).textTheme.titleMedium!
+                        : TextStyle(
+                            fontSize: animation.value,
+                            color: widget.onChange != null
+                                ? Theme.of(context).hintColor
+                                : Theme.of(context).disabledColor,
+                            fontWeight: FontWeight.normal)),
+              ),
             ),
           )
         ],

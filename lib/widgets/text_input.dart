@@ -73,6 +73,7 @@ class _TextInputState extends State<TextInput>
     return Padding(
       padding: const EdgeInsets.only(top: 4, bottom: 8),
       child: TextField(
+        clipBehavior: Clip.none,
         focusNode: textFieldNode,
         onChanged: onChanged,
         onSubmitted: widget.onSubmit,
@@ -83,6 +84,7 @@ class _TextInputState extends State<TextInput>
         enabled: widget.onChanged != null,
         style: widget.textStyle,
         decoration: InputDecoration(
+            border: const OutlineInputBorder(),
             labelText: widget.placeholder,
             errorText:
                 widget.subText?.isEmptyOrSpace ?? true ? null : widget.subText,

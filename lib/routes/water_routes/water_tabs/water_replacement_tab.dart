@@ -103,8 +103,6 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
       serial = value;
       if (serial.isEmptyOrSpace) {
         serialError = ErrorType.emptyValue;
-      } else if (int.tryParse(serial) == null) {
-        serialError = ErrorType.wrongValue;
       } else {
         serialError = ErrorType.none;
       }
@@ -190,7 +188,6 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                                       text: serial,
                                       placeholder: AppLocalizations.of(context)!
                                           .serialNumber,
-                                      keyboardType: TextInputType.number,
                                       onChanged: _setSerial,
                                       subText: _getErrorText(serialError),
                                       subTextStyle: TextStyle(
