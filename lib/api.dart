@@ -10,18 +10,18 @@ import 'package:http/http.dart' as http;
 import 'entities/water/water_meter.dart';
 
 const String _baseUrl = 'https://commpay.idc.md/api/v1';
-const String _tempKey = '2662';
+//const String _tempKey = '2662';
 const Map<String, String> _defaultHeaders = {
   'Content-Type': 'application/json;charset=utf-8'
 };
 
-const List<String> phoneNumbers = ['77755571', '77717709'];
+const Map<String, String> phoneNumbers = {'77755571': '191', '77717709': '111'};
 
 //TODO login
 Future<String?> login(String phone, String password) async {
   await Future.delayed(const Duration(seconds: 1));
-  if (phone == password) {
-    return 'key';
+  if (phone == password && phoneNumbers.containsKey(phone)) {
+    return phoneNumbers[phone];
   } else {
     return null;
   }
@@ -29,7 +29,7 @@ Future<String?> login(String phone, String password) async {
 
 Future<List<WaterMeter>> getWaterMeters(String userId) async {
   http.Response res = await http
-      .get(Uri.parse('$_baseUrl/water/get_counters_by_user_id/$_tempKey'));
+      .get(Uri.parse('$_baseUrl/water/get_counters_by_user_id/$userId'));
   List<dynamic> meters = jsonDecode(res.body);
   return meters
       .cast<Map<String, dynamic>>()
@@ -42,7 +42,7 @@ Future<List<WaterMeter>> searchWaterMeter(String userId, String text) async {
   http.Response res = await http.post(
       Uri.parse('$_baseUrl/water/get_counters_by_serial_number'),
       headers: _defaultHeaders,
-      body: jsonEncode({'serial_number': text, 'user_id': _tempKey}));
+      body: jsonEncode({'serial_number': text, 'user_id': userId}));
   List<dynamic> meters = jsonDecode(res.body);
   return meters
       .cast<Map<String, dynamic>>()
@@ -52,7 +52,7 @@ Future<List<WaterMeter>> searchWaterMeter(String userId, String text) async {
 
 Future<MeasurmentWater> getMeasurments(String userId, WaterMeter meter) async {
   http.Response res = await http
-      .get(Uri.parse('$_baseUrl/water/get_dev_metrics/${meter.id}/$_tempKey'));
+      .get(Uri.parse('$_baseUrl/water/get_dev_metrics/${meter.id}/$userId'));
   List<dynamic> measurments = jsonDecode(res.body);
   var m = measurments
       .cast<Map<String, dynamic>>()
@@ -107,12 +107,13 @@ Future<SuccessResponse> addReplacement(ReplacementWater replacement) async {
   return SuccessResponse.fromJson(jsonDecode(res.body));
 }
 
-Future<SuccessResponse> setFavorite(String objectId, bool favorite) async {
+Future<SuccessResponse> setFavorite(
+    String userId, String objectId, bool favorite) async {
   http.Response res = await http.patch(
       Uri.parse('$_baseUrl/water/change_object_flag_is_favorite'),
       headers: _defaultHeaders,
       body: jsonEncode({
-        'user_id': _tempKey,
+        'user_id': userId,
         'object_id': objectId,
         'is_object_favorite': favorite ? '1' : '0'
       }));

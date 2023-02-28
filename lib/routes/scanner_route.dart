@@ -106,7 +106,7 @@ class _ScannerRouteState extends State<ScannerRoute> {
           showErrorDialog(
               context,
               AppLocalizations.of(context)!.error,
-              AppLocalizations.of(context)!.qrNotFount,
+              AppLocalizations.of(context)!.qrNotFound,
               {AppLocalizations.of(context)!.ok: DialogResult.ok});
         }
       });

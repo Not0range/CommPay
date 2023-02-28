@@ -85,9 +85,14 @@ class _DatePickerState extends State<DatePicker>
                           .merge(widget.textStyle)),
                 ),
               ),
-              Text(
-                widget.subText ?? '',
-                style: widget.subTextStyle,
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                child: Text(
+                  widget.subText ?? '',
+                  textScaleFactor: 0.9,
+                  style: widget.subTextStyle,
+                ),
               )
             ],
           ),

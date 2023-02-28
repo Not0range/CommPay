@@ -188,15 +188,21 @@ class _MyWaterMetersRouteState extends State<MyWaterMetersRoute> {
                 ? Container()
                 : GestureDetector(
                     onTap: () => FocusScope.of(context).unfocus(),
-                    child: ListView.builder(
-                        itemCount: list.length,
-                        itemBuilder: (ctx, i) => WaterMeterItem(
-                              title: list[i].title,
-                              favorite: list[i].isFavorite,
-                              prev: list[i].prevMeasurment,
-                              last: list[i].lastMeasurment,
-                              onTap: () => _goToMeasurment(context, list[i]),
-                            )),
+                    child: list.isNotEmpty
+                        ? ListView.builder(
+                            itemCount: list.length,
+                            itemBuilder: (ctx, i) => WaterMeterItem(
+                                  title: list[i].title,
+                                  favorite: list[i].isFavorite,
+                                  prev: list[i].prevMeasurment,
+                                  last: list[i].lastMeasurment,
+                                  onTap: () =>
+                                      _goToMeasurment(context, list[i]),
+                                ))
+                        : Center(
+                            child:
+                                Text(AppLocalizations.of(context)!.noResults),
+                          ),
                   ),
       ),
     );

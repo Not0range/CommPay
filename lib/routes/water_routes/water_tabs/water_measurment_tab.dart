@@ -116,8 +116,8 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   }
 
   Future _setFavorite() async {
-    var result =
-        await api.setFavorite(widget.meter.id, !widget.meter.isFavorite);
+    var result = await api.setFavorite(
+        widget.keyString, widget.meter.id, !widget.meter.isFavorite);
     if (result.isSuccess) {
       widget.onFavoriteChanged?.call();
       setState(() {

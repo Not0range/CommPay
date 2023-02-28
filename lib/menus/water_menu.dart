@@ -49,7 +49,7 @@ class _WaterMenuState extends State<WaterMenu> {
         showErrorDialog(
             context,
             AppLocalizations.of(context)!.error,
-            AppLocalizations.of(context)!.codeNotFount,
+            AppLocalizations.of(context)!.codeNotFound,
             {AppLocalizations.of(context)!.ok: DialogResult.ok});
         return;
       }

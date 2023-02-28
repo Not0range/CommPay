@@ -242,7 +242,7 @@ class _LoginRouteState extends State<LoginRoute> {
                                   underline: Container(),
                                   isExpanded: true,
                                   value: phone,
-                                  items: api.phoneNumbers
+                                  items: api.phoneNumbers.keys
                                       .map((e) => DropdownMenuItem(
                                             value: e,
                                             child: Text(e),
