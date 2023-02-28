@@ -92,7 +92,7 @@ class _DatePickerState extends State<DatePicker>
             ],
           ),
           AnimatedPositioned(
-            top: widget.date != null ? -25 : 0,
+            top: widget.date != null ? -25 : 5,
             duration: const Duration(milliseconds: animationDuration),
             child: TextButton(
               onPressed: widget.onChange != null
