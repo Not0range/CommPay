@@ -4,6 +4,7 @@
   "cancel": "Cancel",
   "yes": "Yes",
   "no": "No",
+  "version": "Version",
   "notImplemnted": "Not Implemnted",
   "loading": "Loading...",
   "searchInvite": "Type query an press search button",
@@ -13,6 +14,7 @@
   "qrNotFount": "Image not contains qr-codes",
   
   "networkError": "Network error. Check Internet connection.",
+  "loginError": "Wrong number and/or password",
   "errorLoadingData": "Load data error.\nTry again later.",
   "refresh": "Refresh",
   "fieldsMustFilled": "All fields must be filled",

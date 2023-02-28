@@ -14,10 +14,16 @@ const Map<String, String> _defaultHeaders = {
   'Content-Type': 'application/json;charset=utf-8'
 };
 
+const List<String> phoneNumbers = ['77755571', '77717709'];
+
 //TODO login
-Future<String> login(String phone, String password) async {
+Future<String?> login(String phone, String password) async {
   await Future.delayed(const Duration(seconds: 1));
-  return 'key';
+  if (phone == password) {
+    return 'key';
+  } else {
+    return null;
+  }
 }
 
 Future<List<WaterMeter>> getWaterMeters(String userId) async {

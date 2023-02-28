@@ -10,6 +10,7 @@ import 'package:com_pay/api.dart' as api;
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:http/http.dart';
+import 'package:package_info/package_info.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../app_model.dart';
 import 'main_route.dart';
@@ -23,14 +24,18 @@ class LoginRoute extends StatefulWidget {
 }
 
 class _LoginRouteState extends State<LoginRoute> {
+  TextEditingController passwordController = TextEditingController();
+
   bool remember = false;
-  String phone = '';
+  String? phone;
   String password = '';
 
   bool login = false;
   bool loading = true;
   bool passwordError = false;
   bool passwordVisible = false;
+
+  String version = '';
 
   @override
   void initState() {
@@ -39,6 +44,11 @@ class _LoginRouteState extends State<LoginRoute> {
   }
 
   Future _loadStorage() async {
+    var info = await PackageInfo.fromPlatform();
+    setState(() {
+      version = info.version;
+    });
+
     SharedPreferences.getInstance().then((prefs) {
       if (prefs.containsKey('photo_queue')) {
         var list = prefs.getStringList('photo_queue');
@@ -52,16 +62,25 @@ class _LoginRouteState extends State<LoginRoute> {
         }
       }
 
-      if (prefs.containsKey('phone')) {
+      if (prefs.containsKey('phone') && prefs.containsKey('password')) {
         var phone = prefs.getString('phone');
-        if (phone != null) {
+        var password = prefs.getString('password');
+        if (phone != null && password != null) {
+          passwordController.text = password;
           setState(() {
             this.phone = phone;
+            this.password = password;
             remember = true;
           });
         }
       }
       _setLoading(false);
+    });
+  }
+
+  void _setLogin(bool value) {
+    setState(() {
+      login = value;
     });
   }
 
@@ -79,7 +98,7 @@ class _LoginRouteState extends State<LoginRoute> {
     });
   }
 
-  void _setPhone(String value) {
+  void _setPhone(String? value) {
     setState(() {
       phone = value;
     });
@@ -104,10 +123,16 @@ class _LoginRouteState extends State<LoginRoute> {
     });
   }
 
+  void _clearPassword() {
+    _setPassword('');
+    passwordController.clear();
+  }
+
   Future _login() async {
     FocusScope.of(context).unfocus();
     await Future.delayed(Duration.zero, () async {
-      if (phone.isEmptyOrSpace ||
+      if (phone == null ||
+          phone!.isEmptyOrSpace ||
           password.isEmptyOrSpace ||
           password.length < 5) {
         await showErrorDialog(
@@ -117,25 +142,32 @@ class _LoginRouteState extends State<LoginRoute> {
             {AppLocalizations.of(context)!.ok: DialogResult.ok});
         return;
       }
-      setState(() {
-        login = true;
-      });
+      _setLogin(true);
 
       try {
-        String key = await api.login(phone, password);
+        await api.login(phone!, password).then((key) async {
+          if (key == null) {
+            await showErrorDialog(
+                context,
+                AppLocalizations.of(context)!.error,
+                AppLocalizations.of(context)!.loginError,
+                {AppLocalizations.of(context)!.ok: DialogResult.ok});
+            _setLogin(false);
+            return;
+          }
+          var prefs = await SharedPreferences.getInstance();
+          if (remember) {
+            prefs.setString('phone', phone!);
+            prefs.setString('password', password);
+          } else {
+            prefs.remove('phone');
+            prefs.remove('password');
+          }
 
-        var prefs = await SharedPreferences.getInstance();
-        if (remember) {
-          prefs.setString('phone', phone);
-        } else if (prefs.containsKey('phone')) {
-          prefs.remove('phone');
-        }
-
-        _goToMain(key);
-      } on ClientException catch (_) {
-        setState(() {
-          login = false;
+          _goToMain(key);
         });
+      } on ClientException catch (_) {
+        _setLogin(false);
         showErrorDialog(context, AppLocalizations.of(context)!.error,
             AppLocalizations.of(context)!.networkError, {
           AppLocalizations.of(context)!.refresh: DialogResult.retry,
@@ -195,14 +227,55 @@ class _LoginRouteState extends State<LoginRoute> {
                               AppLocalizations.of(context)!.authorization,
                               textScaleFactor: 1.7),
                         ),
-                        TextInput(
-                            text: phone,
-                            placeholder: AppLocalizations.of(context)!.phone,
-                            textInputAction: TextInputAction.next,
-                            keyboardType: TextInputType.phone,
-                            onChanged: _setPhone),
+                        Container(
+                          margin: const EdgeInsets.symmetric(vertical: 8),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 10, vertical: 4),
+                          decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                  color: Theme.of(context).disabledColor)),
+                          child: Stack(
+                            clipBehavior: Clip.none,
+                            children: [
+                              DropdownButton<String>(
+                                  underline: Container(),
+                                  isExpanded: true,
+                                  value: phone,
+                                  items: api.phoneNumbers
+                                      .map((e) => DropdownMenuItem(
+                                            value: e,
+                                            child: Text(e),
+                                          ))
+                                      .toList()
+                                    ..insert(
+                                        0,
+                                        const DropdownMenuItem(
+                                          value: null,
+                                          child: Text(' - '),
+                                        )),
+                                  onChanged: _setPhone),
+                              Positioned(
+                                  top: -13,
+                                  left: -4,
+                                  child: Container(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4),
+                                    color: Theme.of(context)
+                                        .scaffoldBackgroundColor,
+                                    child: Text(
+                                      AppLocalizations.of(context)!.phone,
+                                      textScaleFactor: 0.9,
+                                      style: TextStyle(
+                                          color: Theme.of(context).hintColor),
+                                    ),
+                                  ))
+                            ],
+                          ),
+                        ),
                         TextInput(
                           text: password,
+                          controller: passwordController,
                           placeholder: AppLocalizations.of(context)!.password,
                           textInputAction: TextInputAction.done,
                           keyboardType: TextInputType.visiblePassword,
@@ -215,12 +288,21 @@ class _LoginRouteState extends State<LoginRoute> {
                               : '',
                           subTextStyle: TextStyle(
                               color: Theme.of(context).colorScheme.error),
-                          iconButton: IconButton(
-                              onPressed: () =>
-                                  _setPasswordVisible(!passwordVisible),
-                              icon: Icon(passwordVisible
-                                  ? Icons.remove_red_eye
-                                  : Icons.remove_red_eye_outlined)),
+                          iconButton: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              IconButton(
+                                  onPressed: () =>
+                                      _setPasswordVisible(!passwordVisible),
+                                  icon: Icon(passwordVisible
+                                      ? Icons.remove_red_eye
+                                      : Icons.remove_red_eye_outlined)),
+                              IconButton(
+                                  onPressed: _clearPassword,
+                                  icon: const Icon(Icons.close))
+                            ],
+                          ),
                         ),
                         Row(
                           children: [
@@ -236,6 +318,11 @@ class _LoginRouteState extends State<LoginRoute> {
                           icon: const Icon(Icons.login),
                           label: Text(AppLocalizations.of(context)!.login),
                         ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 20),
+                          child: Text(
+                              '${AppLocalizations.of(context)!.version}: $version'),
+                        )
                       ]),
                     ),
                   ),

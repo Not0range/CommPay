@@ -14,6 +14,7 @@ class TextInput extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? subTextStyle;
   final Widget? iconButton;
+  final TextEditingController? controller;
 
   const TextInput(
       {super.key,
@@ -28,7 +29,8 @@ class TextInput extends StatefulWidget {
       this.subText,
       this.textStyle,
       this.subTextStyle,
-      this.iconButton});
+      this.iconButton,
+      this.controller});
 
   @override
   State<StatefulWidget> createState() => _TextInputState();
@@ -52,7 +54,8 @@ class _TextInputState extends State<TextInput>
       }
     });
 
-    editingController = TextEditingController(text: widget.text);
+    editingController =
+        widget.controller ?? TextEditingController(text: widget.text);
   }
 
   @override
