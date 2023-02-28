@@ -34,7 +34,8 @@
   "logoutQuestion": "Are you sure?",
   "passwordLength": "Password must be contains at least 5 characters",
 
-  "watterSupply": "Watter Supply",
+  "mainMenu": "Main menu",
+  "waterSupply": "Water Supply",
   "electricity": "Electricity",
   "gas": "Gas",
   "recycling": "Recycling",

@@ -137,17 +137,20 @@ class _WaterMeterRouteState extends State<WaterMeterRoute>
         return WaterMeasurmentTab(
             keyString: widget.keyString,
             meter: widget.meter,
+            onFavoriteChanged: () => needReload = true,
             onChecking: (c) => _setChecking(0, c));
       case 1:
         return WaterVerificationTab(
           keyString: widget.keyString,
           meter: widget.meter,
+          onFavoriteChanged: () => needReload = true,
           onChecking: (c) => _setChecking(1, c),
         );
       case 2:
         return WaterReplacementTab(
           keyString: widget.keyString,
           meter: widget.meter,
+          onFavoriteChanged: () => needReload = true,
           onChecking: (c) => _setChecking(2, c),
         );
     }

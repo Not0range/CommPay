@@ -72,32 +72,37 @@ class _WaterMenuState extends State<WaterMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return OverlayWidget(
-      overlay: loading
-          ? Container(
-              color: Colors.black.withAlpha(150),
-              alignment: Alignment.center,
-              width: double.maxFinite,
-              height: double.maxFinite,
-              child: const CircularProgressIndicator(),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(AppLocalizations.of(context)!.waterSupply),
+      ),
+      body: OverlayWidget(
+        overlay: loading
+            ? Container(
+                color: Colors.black.withAlpha(150),
+                alignment: Alignment.center,
+                width: double.maxFinite,
+                height: double.maxFinite,
+                child: const CircularProgressIndicator(),
+              )
+            : Container(),
+        child: ListView(
+          children: [
+            MenuItem(
+                icon: Icons.speed,
+                text: AppLocalizations.of(context)!.myWaterMeters,
+                onTap: () => _goToMeters(context)),
+            MenuItem(
+                icon: Icons.qr_code,
+                text: AppLocalizations.of(context)!.searchWaterQr,
+                onTap: () => _goToScanner(context)),
+            MenuItem(
+              icon: Icons.search,
+              text: AppLocalizations.of(context)!.searchWaterCode,
+              onTap: () => _goToSearch(context),
             )
-          : Container(),
-      child: ListView(
-        children: [
-          MenuItem(
-              icon: Icons.speed,
-              text: AppLocalizations.of(context)!.myWaterMeters,
-              onTap: () => _goToMeters(context)),
-          MenuItem(
-              icon: Icons.qr_code,
-              text: AppLocalizations.of(context)!.searchWaterQr,
-              onTap: () => _goToScanner(context)),
-          MenuItem(
-            icon: Icons.search,
-            text: AppLocalizations.of(context)!.searchWaterCode,
-            onTap: () => _goToSearch(context),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }

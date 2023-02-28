@@ -14,46 +14,12 @@ class MainRoute extends StatefulWidget {
   State<StatefulWidget> createState() => _MainRouteState();
 }
 
-//TODO 3 pages
 class _MainRouteState extends State<MainRoute> {
-  int selectedTab = 0;
-
-  List<BottomNavigationBarItem> _tabButtons(BuildContext context) {
-    return [
-      BottomNavigationBarItem(
-          icon: const Icon(Icons.water_drop),
-          label: AppLocalizations.of(context)!.watterSupply),
-      BottomNavigationBarItem(
-          icon: const Icon(Icons.lightbulb),
-          label: AppLocalizations.of(context)!.electricity),
-      BottomNavigationBarItem(
-          icon: const Icon(Icons.gas_meter),
-          label: AppLocalizations.of(context)!.gas),
-      BottomNavigationBarItem(
-          icon: const Icon(Icons.recycling),
-          label: AppLocalizations.of(context)!.recycling)
-    ];
-  }
-
-  void _tabTap(int i) {
-    setState(() {
-      selectedTab = i;
-    });
-  }
-
-  Widget _tab(int index) {
-    if (index == 0) {
-      return WaterMenu(
-        keyString: widget.keyString,
-      );
-    }
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Center(child: Text(AppLocalizations.of(context)!.notImplemnted))
-      ],
-    );
+  void _goToWatterSupply() {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (ctx) => WaterMenu(keyString: widget.keyString)));
   }
 
   void _goToPhotoSending() {
@@ -76,10 +42,9 @@ class _MainRouteState extends State<MainRoute> {
 
   @override
   Widget build(BuildContext context) {
-    var buttons = _tabButtons(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text(buttons[selectedTab].label!),
+        title: Text(AppLocalizations.of(context)!.mainMenu),
         leading: IconButton(onPressed: _logout, icon: const Icon(Icons.logout)),
         actions: [
           IconButton(
@@ -87,13 +52,28 @@ class _MainRouteState extends State<MainRoute> {
               icon: const Icon(Icons.cloud_upload))
         ],
       ),
-      body: _tab(selectedTab),
-      bottomNavigationBar: BottomNavigationBar(
-          items: buttons,
-          currentIndex: selectedTab,
-          onTap: _tabTap,
-          selectedItemColor: Colors.amber,
-          unselectedItemColor: Colors.grey),
+      body: ListView(children: [
+        ListTile(
+          onTap: _goToWatterSupply,
+          leading: const Icon(Icons.water_drop),
+          title: Text(AppLocalizations.of(context)!.waterSupply),
+        ),
+        ListTile(
+          onTap: () {},
+          leading: const Icon(Icons.lightbulb),
+          title: Text(AppLocalizations.of(context)!.electricity),
+        ),
+        ListTile(
+          onTap: () {},
+          leading: const Icon(Icons.gas_meter),
+          title: Text(AppLocalizations.of(context)!.gas),
+        ),
+        ListTile(
+          onTap: () {},
+          leading: const Icon(Icons.recycling),
+          title: Text(AppLocalizations.of(context)!.recycling),
+        ),
+      ]),
     );
   }
 }

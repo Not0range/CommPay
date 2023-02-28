@@ -4,6 +4,7 @@ import 'package:com_pay/entities/water/measurment_water.dart';
 import 'package:com_pay/entities/water/replacement_water.dart';
 import 'package:com_pay/entities/success_response.dart';
 import 'package:com_pay/entities/water/verification_water.dart';
+import 'package:com_pay/utils.dart';
 import 'package:http/http.dart' as http;
 
 import 'entities/water/water_meter.dart';
@@ -33,6 +34,7 @@ Future<List<WaterMeter>> getWaterMeters(String userId) async {
   return meters
       .cast<Map<String, dynamic>>()
       .map((e) => WaterMeter.fromJson(e))
+      .distinctBy((m) => m.id, (m1, m2) => m1.isFavorite ? -1 : 1)
       .toList();
 }
 
@@ -102,5 +104,17 @@ Future<SuccessResponse> addReplacement(ReplacementWater replacement) async {
       Uri.parse('$_baseUrl/water/save_dev_replacement'),
       headers: _defaultHeaders,
       body: jsonEncode(replacement.toJson()));
+  return SuccessResponse.fromJson(jsonDecode(res.body));
+}
+
+Future<SuccessResponse> setFavorite(String objectId, bool favorite) async {
+  http.Response res = await http.patch(
+      Uri.parse('$_baseUrl/water/change_object_flag_is_favorite'),
+      headers: _defaultHeaders,
+      body: jsonEncode({
+        'user_id': _tempKey,
+        'object_id': objectId,
+        'is_object_favorite': favorite ? '1' : '0'
+      }));
   return SuccessResponse.fromJson(jsonDecode(res.body));
 }

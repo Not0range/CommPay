@@ -16,12 +16,14 @@ class WaterMeasurmentTab extends StatefulWidget {
   final WaterMeter meter;
   final String keyString;
   final void Function(MeasurmentWater? state)? onChecking;
+  final VoidCallback? onFavoriteChanged;
 
   const WaterMeasurmentTab(
       {super.key,
       required this.meter,
       required this.keyString,
-      this.onChecking});
+      this.onChecking,
+      this.onFavoriteChanged});
 
   @override
   State<StatefulWidget> createState() => _WaterMeasurmentTabState();
@@ -35,8 +37,8 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   bool loading = false;
   bool error = false;
 
-  late DateTime prev;
-  late DateTime last;
+  DateTime? prev;
+  DateTime? last;
   int prevValue = 0;
   String lastValue = '';
   bool noConsumption = false;
@@ -46,7 +48,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
   @override
   void initState() {
     super.initState();
-    last = widget.meter.lastMeasurment;
+    last = widget.meter.lastMeasurment ?? DateTime.now().today;
 
     controller = AnimationController(
         value: 1, duration: const Duration(milliseconds: 100), vsync: this);
@@ -70,7 +72,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
           prevValue = m.prevValue!;
           lastValue = m.currentValue.toString();
 
-          prev = m.prevDate ?? widget.meter.lastMeasurment;
+          prev = m.prevDate;
           last = m.currentDate;
           noConsumption = m.noConsumption;
           if (noConsumption) controller.value = 0;
@@ -111,6 +113,17 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
       noConsumption = value;
       _checkValues();
     });
+  }
+
+  Future _setFavorite() async {
+    var result =
+        await api.setFavorite(widget.meter.id, !widget.meter.isFavorite);
+    if (result.isSuccess) {
+      widget.onFavoriteChanged?.call();
+      setState(() {
+        widget.meter.isFavorite = !widget.meter.isFavorite;
+      });
+    }
   }
 
   ErrorType _checkError(int? value) {
@@ -169,7 +182,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                WaterMeterWidget(widget.meter),
+                WaterMeterWidget(widget.meter, onFavorite: _setFavorite),
                 Padding(
                   padding: const EdgeInsets.only(left: 8, right: 8, top: 8),
                   child: Column(
@@ -189,7 +202,7 @@ class _WaterMeasurmentTabState extends State<WaterMeasurmentTab>
                           minDate: widget.meter.prevMeasurment,
                           date: last,
                           onChange: _setLastDate,
-                          subText: widget.meter.prevMeasurment == last
+                          subText: prev == last && prev != null
                               ? AppLocalizations.of(context)!.sameDates
                               : '',
                           textStyle: widget.meter.prevMeasurment == last

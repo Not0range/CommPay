@@ -5,8 +5,9 @@ import '../entities/water/water_meter.dart';
 
 class WaterMeterWidget extends StatelessWidget {
   final WaterMeter meter;
+  final VoidCallback? onFavorite;
 
-  const WaterMeterWidget(this.meter, {super.key});
+  const WaterMeterWidget(this.meter, {super.key, this.onFavorite});
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +29,19 @@ class WaterMeterWidget extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text('${AppLocalizations.of(context)!.objectId}: '
-              '${meter.id}'),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Text('${AppLocalizations.of(context)!.objectId}: '
+                    '${meter.id}'),
+              ),
+              InkWell(
+                  onTap: onFavorite,
+                  child:
+                      Icon(meter.isFavorite ? Icons.star : Icons.star_border))
+            ],
+          ),
         ),
         const Divider(
           thickness: 2,

@@ -17,14 +17,15 @@ import 'package:com_pay/api.dart' as api;
 class WaterReplacementTab extends StatefulWidget {
   final WaterMeter meter;
   final String keyString;
-
   final void Function(dynamic state)? onChecking;
+  final VoidCallback? onFavoriteChanged;
 
   const WaterReplacementTab(
       {super.key,
       required this.keyString,
       required this.meter,
-      this.onChecking});
+      this.onChecking,
+      this.onFavoriteChanged});
 
   @override
   State<StatefulWidget> createState() => _WaterReplacementTab();
@@ -125,6 +126,17 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
     });
   }
 
+  Future _setFavorite() async {
+    var result =
+        await api.setFavorite(widget.meter.id, !widget.meter.isFavorite);
+    if (result.isSuccess) {
+      widget.onFavoriteChanged?.call();
+      setState(() {
+        widget.meter.isFavorite = !widget.meter.isFavorite;
+      });
+    }
+  }
+
   void _checkValues() {
     if (serial.isEmptyOrSpace) {
       serialError = ErrorType.emptyValue;
@@ -178,7 +190,7 @@ class _WaterReplacementTab extends State<WaterReplacementTab>
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      WaterMeterWidget(widget.meter),
+                      WaterMeterWidget(widget.meter, onFavorite: _setFavorite),
                       Padding(
                         padding:
                             const EdgeInsets.only(left: 8, right: 8, top: 8),

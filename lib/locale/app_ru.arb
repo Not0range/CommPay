@@ -34,7 +34,8 @@
   "logoutQuestion": "Вы уверены?",
   "passwordLength": "Пароль должен содержать не менее 5 символов",
 
-  "watterSupply": "Водоснабжение",
+  "mainMenu": "Главное меню",
+  "waterSupply": "Водоснабжение",
   "electricity": "Электроэнергия",
   "gas": "Газ",
   "recycling": "ТБО",

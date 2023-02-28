@@ -111,6 +111,7 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
                           itemCount: meters.length,
                           itemBuilder: (ctx, i) => WaterMeterItem(
                                 title: meters[i].title,
+                                favorite: meters[i].isFavorite,
                                 prev: meters[i].prevMeasurment,
                                 last: meters[i].lastMeasurment,
                                 onTap: () =>

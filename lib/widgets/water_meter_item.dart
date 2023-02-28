@@ -3,21 +3,23 @@ import 'package:intl/intl.dart';
 
 class WaterMeterItem extends StatelessWidget {
   final String title;
-  final DateTime prev;
-  final DateTime last;
+  final bool favorite;
+  final DateTime? prev;
+  final DateTime? last;
   final VoidCallback? onTap;
 
   const WaterMeterItem(
       {super.key,
       required this.title,
-      required this.prev,
-      required this.last,
+      required this.favorite,
+      this.prev,
+      this.last,
       this.onTap});
 
   @override
   Widget build(BuildContext context) {
     TextStyle? ts;
-    if (prev == last) {
+    if (prev == last || prev == null || last == null) {
       ts = TextStyle(color: Theme.of(context).colorScheme.error);
     }
     return Column(
@@ -26,17 +28,27 @@ class WaterMeterItem extends StatelessWidget {
           onTap: onTap,
           title: Padding(
             padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              title,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                Icon(favorite ? Icons.star : Icons.star_border)
+              ],
             ),
           ),
           subtitle: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat('dd.MM.yy').format(prev)),
-              Text(DateFormat('dd.MM.yy').format(last), style: ts),
+              Text(prev != null ? DateFormat('dd.MM.yy').format(prev!) : '-',
+                  style: ts),
+              Text(last != null ? DateFormat('dd.MM.yy').format(last!) : '-',
+                  style: ts),
             ],
           ),
         ),

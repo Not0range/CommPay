@@ -24,6 +24,22 @@ extension DateTimeExtension on DateTime {
   }
 }
 
+extension ListExtension<T> on Iterable<T> {
+  List<T> distinctBy<K>(
+      K Function(T) keySelector, int Function(T, T)? sortFunc) {
+    var list = toList();
+    list.sort(sortFunc);
+    var result = <T>[];
+    var set = <K>{};
+    for (var item in list) {
+      if (set.add(keySelector(item))) {
+        result.add(item);
+      }
+    }
+    return result;
+  }
+}
+
 Future<DialogResult?> showErrorDialog(BuildContext context, String title,
     String text, Map<String, DialogResult> actions) async {
   return showDialog<DialogResult?>(
