@@ -110,6 +110,9 @@ class _SearchWaterMeterRouteState extends State<SearchWaterMeterRoute> {
                       : ListView.builder(
                           itemCount: meters.length,
                           itemBuilder: (ctx, i) => WaterMeterItem(
+                                backgroundColor: i % 2 == 0
+                                    ? Theme.of(context).canvasColor
+                                    : Theme.of(context).dividerColor,
                                 title: meters[i].title,
                                 favorite: meters[i].isFavorite,
                                 prev: meters[i].prevMeasurment,

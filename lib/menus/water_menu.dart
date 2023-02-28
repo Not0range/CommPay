@@ -93,6 +93,7 @@ class _WaterMenuState extends State<WaterMenu> {
                 text: AppLocalizations.of(context)!.myWaterMeters,
                 onTap: () => _goToMeters(context)),
             MenuItem(
+                backgroundColor: Theme.of(context).dividerColor,
                 icon: Icons.qr_code,
                 text: AppLocalizations.of(context)!.searchWaterQr,
                 onTap: () => _goToScanner(context)),

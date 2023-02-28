@@ -7,6 +7,7 @@ class WaterMeterItem extends StatelessWidget {
   final DateTime? prev;
   final DateTime? last;
   final VoidCallback? onTap;
+  final Color? backgroundColor;
 
   const WaterMeterItem(
       {super.key,
@@ -14,48 +15,50 @@ class WaterMeterItem extends StatelessWidget {
       required this.favorite,
       this.prev,
       this.last,
-      this.onTap});
+      this.onTap,
+      this.backgroundColor});
 
   @override
   Widget build(BuildContext context) {
-    TextStyle? ts;
+    TextStyle prevStyle = const TextStyle(fontWeight: FontWeight.bold);
+    TextStyle currentStyle = const TextStyle(fontWeight: FontWeight.bold);
     if (prev == last || prev == null || last == null) {
-      ts = TextStyle(color: Theme.of(context).colorScheme.error);
+      currentStyle =
+          currentStyle.copyWith(color: Theme.of(context).colorScheme.error);
     }
-    return Column(
-      children: [
-        ListTile(
-          onTap: onTap,
-          title: Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    title,
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Icon(favorite ? Icons.star : Icons.star_border)
-              ],
-            ),
-          ),
-          subtitle: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 4),
+      child: ListTile(
+        tileColor: backgroundColor,
+        onTap: onTap,
+        title: Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(prev != null ? DateFormat('dd.MM.yy').format(prev!) : '-',
-                  style: ts),
-              Text(last != null ? DateFormat('dd.MM.yy').format(last!) : '-',
-                  style: ts),
+              Expanded(
+                child: Text(
+                  title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              Icon(favorite ? Icons.star : Icons.star_border)
             ],
           ),
         ),
-        const Divider(
-          thickness: 1.5,
-        )
-      ],
+        subtitle: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              prev != null ? DateFormat('dd.MM.yy').format(prev!) : '-',
+              style: prevStyle,
+            ),
+            Text(last != null ? DateFormat('dd.MM.yy').format(last!) : '-',
+                style: currentStyle),
+          ],
+        ),
+      ),
     );
   }
 }

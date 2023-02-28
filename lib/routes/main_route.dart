@@ -2,6 +2,7 @@ import 'package:com_pay/menus/water_menu.dart';
 import 'package:com_pay/routes/login_route.dart';
 import 'package:com_pay/routes/sending_photos_route.dart';
 import 'package:com_pay/utils.dart';
+import 'package:com_pay/widgets/menu_item.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
@@ -53,25 +54,27 @@ class _MainRouteState extends State<MainRoute> {
         ],
       ),
       body: ListView(children: [
-        ListTile(
+        MenuItem(
           onTap: _goToWatterSupply,
-          leading: const Icon(Icons.water_drop),
-          title: Text(AppLocalizations.of(context)!.waterSupply),
+          icon: Icons.water_drop,
+          text: AppLocalizations.of(context)!.waterSupply,
         ),
-        ListTile(
+        MenuItem(
+          backgroundColor: Theme.of(context).dividerColor,
           onTap: () {},
-          leading: const Icon(Icons.lightbulb),
-          title: Text(AppLocalizations.of(context)!.electricity),
+          icon: Icons.lightbulb,
+          text: AppLocalizations.of(context)!.electricity,
         ),
-        ListTile(
+        MenuItem(
           onTap: () {},
-          leading: const Icon(Icons.gas_meter),
-          title: Text(AppLocalizations.of(context)!.gas),
+          icon: Icons.gas_meter,
+          text: AppLocalizations.of(context)!.gas,
         ),
-        ListTile(
+        MenuItem(
+          backgroundColor: Theme.of(context).dividerColor,
           onTap: () {},
-          leading: const Icon(Icons.recycling),
-          title: Text(AppLocalizations.of(context)!.recycling),
+          icon: Icons.recycling,
+          text: AppLocalizations.of(context)!.recycling,
         ),
       ]),
     );
