@@ -36,6 +36,13 @@ class AppModel extends ChangeNotifier {
     _setData();
   }
 
+  void removePhotoAt(PhotoSend item, int index) {
+    item.paths.removeAt(index);
+    if (item.paths.isEmpty) remove(item);
+    notifyListeners();
+    _setData();
+  }
+
   void clear() {
     for (var ps in _photosToSend) {
       _removeImages(ps);

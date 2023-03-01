@@ -31,7 +31,9 @@
   "remember": "Remember me",
   "login": "Login",
   "logout": "Logout",
-  "logoutQuestion": "Are you sure?",
+  "close": "Close",
+  "logoutQuestion": "Are you sure to logout?",
+  "exitQuestion": "Are you sure to close app?",
   "passwordLength": "Password must be contains at least 5 characters",
 
   "mainMenu": "Main menu",
@@ -46,6 +48,8 @@
   "sendingPhotos": "Sending photos",
   "photoDate": "Photo made in",
   "fileInQueue": "Files in queue count",
+  "delete": "Delete",
+  "deleteQuestion": "Are you sure to delete this photo?",
 
   "myWaterMeters": "My meters",
   "searchWaterQr": "Search meter by QR",
